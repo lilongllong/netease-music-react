@@ -1,0 +1,44 @@
+{
+  "name": "netease-music-app",
+  "version": "1.0.0",
+  "description": "使用react+redux+material技术实现高仿网易云音乐播放列表及播放器",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lilongllong/netease-music-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lilongllong/netease-music-app/issues"
+  },
+  "homepage": "https://github.com/lilongllong/netease-music-app#readme",
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-transform-runtime": "^6.9.0",
+    "babel-polyfill": "^6.9.1",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.11.1",
+    "babel-preset-stage-0": "^6.5.0",
+    "babel-runtime": "^6.9.2",
+    "babelify": "^7.3.0",
+    "css-loader": "^0.23.1",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "gulp": "^3.9.1",
+    "gulp-open": "^2.0.0",
+    "jquery": "^3.0.0",
+    "less": "^2.7.1",
+    "less-loader": "^2.2.3",
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1",
+    "rimraf": "^2.5.3",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.15.0",
+    "wolfy87-eventemitter": "^5.1.0"
+  }
+}
