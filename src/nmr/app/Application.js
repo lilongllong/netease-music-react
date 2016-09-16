@@ -1,4 +1,4 @@
-import PlayList from "../components/PlayList";
+import PlayListsView from "../components/PlayListsView";
 
 export default class Application
 {
