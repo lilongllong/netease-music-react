@@ -1,0 +1,243 @@
+#player-view {
+    width: 100%;
+    height: 100%;
+    background: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+     > *
+    {
+        color: white;
+        background: transparent;
+    }
+
+    a
+    {
+        cursor: pointer;
+        text-decoration: none;
+
+    }
+
+    a:hover
+    {
+        text-decoration: underline;
+    }
+
+    .iconfont
+    {
+        color: @nm-player-light-color;
+        width: 100%;
+        height: 100%;
+    }
+
+    .iconfont:hover
+    {
+        color: @nm-player-color;
+    }
+
+    > div
+    {
+        height: @nm-app-footer-height;
+    }
+
+    > .track-btns
+    {
+        flex: 0 0 157px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+
+        > .prev
+        {
+            height: 28px;
+            flex: 0 0 28px;
+            font-size: 26px;
+            margin-left: 5px;
+        }
+
+        > .play
+        {
+            height: 36px;
+            flex: 0 0 36px;
+            font-size: 36px;
+            margin-bottom: 10px;
+            margin-left: 5px;
+        }
+
+        > .next
+        {
+            height: 28px;
+            flex: 0 0 28px;
+            font-size: 26px;
+            margin-left: 5px;
+        }
+    }
+
+
+    > .track-icon
+    {
+        height: 36px;
+        width: 36px;
+        flex: 0 0 36px;
+        margin-right: 15px;
+        padding: 0;
+        > img
+        {
+            border-radius: 4px;
+            height: 100%;
+            width: 100%;
+        }
+    }
+
+    > .track-process
+    {
+        flex: 0 0 570px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        > .head
+        {
+            flex: 0 0 28px;
+
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            line-height: 28px;
+
+            text-overflow: clip;
+            overflow-x: hidden;
+            white-space: nowrap;
+
+            .track-name
+            {
+                margin-right: 10px;
+                flex-grow: 0;
+                flex-shrink: 1;
+
+            }
+
+            .track-artist
+            {
+                margin-right: 10px;
+                flex-grow: 0;
+                flex-shrink: 1;
+                color: @nm-player-light-color;
+            }
+
+
+        }
+
+        > .foot
+        {
+            flex: 0 0 16px;
+
+            display: flex;
+            flex-direction: row;
+
+            .track-process
+            {
+                align-items: center;
+                flex: 0 0 500px;
+                position: relative;
+                padding-right: 20px;
+
+                > .bg
+                {
+                    margin-top: 4px;
+                    width: 480px;
+                    height: 10px;
+                    border-radius: 5px;
+                    background: #555;
+                }
+                > .process
+                {
+                    position: absolute;
+                    top: 4px;
+                    z-index: 1;
+                    width: 0px;
+                    height: 10px;
+                    border-radius: 5px;
+                    background: red;
+
+                    > .point
+                    {
+                        position: absolute;
+                        top: -4px;
+                        right: -9px;
+                        width: 16px;
+                        height: 16px;
+                        font-size: 15px;
+                        border-radius: 10px;
+                        color: red;
+                        background: white;
+                    }
+                }
+            }
+
+            .track-time
+            {
+                flex: 0 0 70px;
+                font-size: @font-size-small;
+                margin-top: 0;
+            }
+        }
+    }
+
+    > .track-share
+    {
+        flex: 0 0 60px;
+        margin-left: 25px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+
+        > a.iconfont
+        {
+            font-size: @font-size-h3;
+            flex: 0 0 25px;
+            height: 25px;
+        }
+
+        > a.iconfont:hover
+        {
+            text-decoration: none;
+        }
+    }
+
+    > .track-setting
+    {
+        flex: 0 0 131px;
+        margin-left: 25px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+
+        > .track-volume
+        {
+            font-size: @font-size-h2;
+            flex: 0 0 25px;
+            height: 25px;
+        }
+
+        > a.track-volume:hover
+        {
+            text-decoration: none;
+        }
+
+    }
+
+    > .music-player
+    {
+         display: none;
+
+    }
+}
