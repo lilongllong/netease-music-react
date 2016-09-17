@@ -36,7 +36,7 @@ export default class ApplicationController
     {
         const playlists = await ServiceClient.getInstance().getUserPlayLists();
         ReactDOM.render(
-            <PlayListsView data={ playlists } className="nmr-play-list-view"/>,
+            <PlayListsView data={ playlists } className="nm-play-list-view"/>,
             $(".sidebar")[0]
         );
         console.log(playlists);

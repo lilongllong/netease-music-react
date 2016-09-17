@@ -1,7 +1,10 @@
-.nmr-play-list-view {
+.nm-play-list-view {
     line-height: @nm-list-item-height;
     text-overflow: ellipsis;
     overflow-x: hidden;
+    width: 100%;
+    padding: 0;
+    margin: 0;
 
     li
     {
@@ -15,5 +18,11 @@
         {
             margin-right: 8px;
         }
+    }
+
+    li.selected
+    {
+        color: @nju-section-color;
+        background: @nju-section-bg;
     }
 }
