@@ -38,7 +38,7 @@ export default class PlayListsView extends React.Component
                 $oldTarget.removeClass("selected");
             }
             $target.addClass("selected");
-            this.state.selectedID = id;
+            this.setState({ selectedID: id})
         }
     }
 

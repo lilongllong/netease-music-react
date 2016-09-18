@@ -6,6 +6,7 @@ import Application from "./Application";
 import ServiceClient from "../service/ServiceClient";
 
 import PlayListsView from "../components/PlayListsView";
+import TrackTableView from "../components/TrackTableView";
 
 export default class ApplicationController
 {
@@ -32,6 +33,7 @@ export default class ApplicationController
         }
         $(document.body).append(this.view.$element);
     }
+
     async _loadAllPlayList()
     {
         const playlists = await ServiceClient.getInstance().getUserPlayLists();
@@ -39,7 +41,13 @@ export default class ApplicationController
             <PlayListsView data={ playlists } className="nm-play-list-view"/>,
             $(".sidebar")[0]
         );
-        console.log(playlists);
+        
+        const tracks = await ServiceClient.getInstance().getPlayListDetail(playlists[0].id);
+        console.log(tracks);
+        ReactDOM.render(
+            <TrackTableView data={ tracks } className="nm-track-table-view striped"/>,
+            $(".content")[0]
+        );
 
     }
 }
