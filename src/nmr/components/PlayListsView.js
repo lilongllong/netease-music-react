@@ -1,48 +1,73 @@
 import React from "react";
 
+import ServiceClient from "../service/ServiceClient";
+
 export default class PlayListsView extends React.Component
 {
-
     constructor(props)
     {
         super(props);
-        this.state = { selectedID: props.selectedID, class: props.class };
-        this.data = props.data;
-        this.className = props.className;
+        this._initData();
+    }
+
+    static propTypes = {
+        userId: ""
+    }
+
+    static defaultProps = {
+        userId: React.PropTypes.string.isRequired
+    }
+
+    state = {
+        selectedId: null,
+        data: []
     }
 
     render()
     {
-        const $lis = this.data.map((playlist) => {
-        let className = "nm-playlist-item";
-        if (playlist.id === this.selectedID )
+        const $lis = this.state.data.map((playlist) => {
+        let className = "nm-play-list-item";
+        if (playlist.id === this.selectedId )
         {
             className += " selected";
         }
 
         return (<li ref={ playlist.id } key={ playlist.id } className={ className } onClick={ () => this._onClick(playlist.id) } > <span className="icon iconfont icon-music"></span> { playlist.name } </li>);
         });
-        return ( <ul className={ this.className } >
+        return ( <ul className={ this.props.className } >
             {$lis}
         </ul>);
     }
 
+    componentDidUpdate()
+    {
+
+    }
+
+    async _initData()
+    {
+         const result = await ServiceClient.getInstance().getUserPlayLists(this.props.userId);
+         const $target = $(this.refs[result[0].id]);
+         $target.addClass("selected");
+         this.props.handleSelectionChange(result[0].id);
+         this.setState({ data: result, selectedId: result[0].id });
+    }
+
     _onClick(id)
     {
-        if (id !== this.selectedID)
+        if (id !== this.state.selectedId)
         {
             const $target = $(this.refs[id]);
-            const $oldTarget = $(this.refs[this.state.selectedID]);
+            const $oldTarget = $(this.refs[this.state.selectedId]);
             if ($oldTarget)
             {
                 $oldTarget.removeClass("selected");
             }
             $target.addClass("selected");
-            this.setState({ selectedID: id})
+            this.props.handleSelectionChange(id);
+            this.setState({ selectedId: id});
+            console.log("selected change: " + this.state.selectedId + " -> " + id);
         }
     }
 
 }
-
-PlayListsView.propTypes = { selectedPlaylist: React.PropTypes.string, data: React.PropTypes.array };
-PlayListsView.defaultTypes = { selectedPlaylist: null, data: [] };
