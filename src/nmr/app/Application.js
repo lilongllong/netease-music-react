@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 
+import PlayerView from "../components/PlayerView";
 import PlayListsView from "../components/PlayListsView";
 import ServiceClient from "../service/ServiceClient";
 import TrackTableView from "../components/TrackTableView";
@@ -23,6 +24,7 @@ export default class Application extends Component
     state = {
         selectedPlaylistId: null,
         selectedTrack: null,
+        trackList: []
     }
 
     componentWillUpdate()
@@ -39,17 +41,14 @@ export default class Application extends Component
             <aside className="sidebar"> <PlayListsView className="nm-play-list-view" userId={ this.props.userId } handleSelectionChange={ this.playSelectionChange.bind(this) } /> </aside>
             <section className="content"><TrackTableView className="nm-track-table-view striped" playlistId={ this.state.selectedPlaylistId } handleSelectionChange={ this.trackSelectionChange.bind(this) }/></section>
         </main>
-        <footer></footer>
+        <footer><PlayerView className="nm-player-view" selectedTrack={ this.state.selectedTrack } trackList={ this.state.trackList }/></footer>
         </div>);
-
-        //
     }
 
     playSelectionChange(playlistId)
     {
         if (playlistId !== this.state.selectedPlaylistId)
         {
-            console.log("update Id 1", playlistId);
             this.setState({ selectedPlaylistId: playlistId });
         }
     }
@@ -58,8 +57,8 @@ export default class Application extends Component
     {
         if (this.track !== this.state.selectedTrack )
         {
-            console.log("track", track);
             this.setState({ selectedTrack: track });
+            this.state.trackList.push(track);
         }
     }
 }
