@@ -4,6 +4,20 @@
     border-right: 1px solid @nm-separate-color;
     width: 100%;
 
+    &.striped
+    {
+        tbody tr:nth-child(2n + 1)
+        {
+            background: @nju-striped-color;
+        }
+        
+        tbody tr.selected
+        {
+            color: @nju-section-color;
+            background: @nju-section-bg;
+        }
+    }
+
     tr
     {
         height: @nm-list-item-height;
@@ -43,5 +57,4 @@
             width: 300px;
         }
     }
-
 }
