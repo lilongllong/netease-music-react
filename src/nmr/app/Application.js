@@ -2,7 +2,9 @@ import React, { Component } from "react";
 
 import PlayerView from "../components/PlayerView";
 import PlayListsView from "../components/PlayListsView";
+import SearchView from "../components/SearchView";
 import ServiceClient from "../service/ServiceClient";
+import TrackInfoView from "../components/TrackInfoView";
 import TrackTableView from "../components/TrackTableView";
 
 export default class Application extends Component
@@ -24,7 +26,8 @@ export default class Application extends Component
     state = {
         selectedPlaylistId: null,
         selectedTrack: null,
-        trackList: []
+        trackList: [],
+        trackInfoType: "歌单"
     }
 
     componentWillUpdate()
@@ -36,10 +39,16 @@ export default class Application extends Component
     {
         console.log("1.1", this.state.selectedPlaylistId);
         return (<div className="nm-app">
-        <header><h1>网易云音乐</h1></header>
+        <header>
+        <h1>网易云音乐</h1>
+        <SearchView className="nm-search-view" placeholder="请输入" handleSelectionChange={ this.handleSearchSelectedChange.bind(this) }/>
+        </header>
         <main>
             <aside className="sidebar"> <PlayListsView className="nm-play-list-view" userId={ this.props.userId } handleSelectionChange={ this.playSelectionChange.bind(this) } /> </aside>
-            <section className="content"><TrackTableView className="nm-track-table-view striped" playlistId={ this.state.selectedPlaylistId } handleSelectionChange={ this.trackSelectionChange.bind(this) }/></section>
+            <section className="content">
+                <TrackInfoView className="nm-track-info-view" trackType={ this.state.trackInfoType } handleSelectionChange={ this.trackSelectionChange.bind(this) } />
+                <TrackTableView className="nm-track-table-view striped" playlistId={ this.state.selectedPlaylistId } handleSelectionChange={ this.trackSelectionChange.bind(this) }/>
+            </section>
         </main>
         <footer><PlayerView className="nm-player-view" selectedTrack={ this.state.selectedTrack } trackList={ this.state.trackList }/></footer>
         </div>);
@@ -59,6 +68,16 @@ export default class Application extends Component
         {
             this.setState({ selectedTrack: track });
             this.state.trackList.push(track);
+        }
+    }
+
+    handleSearchSelectedChange(value)
+    {
+        if (value && value !== "")
+        {
+            ServiceClient.getInstance().search(value).then(data => {
+
+            });
         }
     }
 }

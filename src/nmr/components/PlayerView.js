@@ -5,6 +5,9 @@ export default class PlayerView extends Component
     constructor(props)
     {
         super(props);
+        this.setState({
+            onPlayTrack: props.selectedTrack
+        });
     }
 
     static propTypes = {
@@ -16,7 +19,7 @@ export default class PlayerView extends Component
     }
 
     state = {
-        onPlayTrack: selectedTrack
+        onPlayTrack: null
     }
 
     componentWillReceiveProps(nextProps)
@@ -44,7 +47,7 @@ export default class PlayerView extends Component
                     <span className="play iconfont icon-play"></span>
                     <span className="next iconfont icon-next"></span>
                 </div>
-                <div className="track-icon"><img src={ track.album.blurPicUrl }></div>
+                <div className="track-icon"><img src={ track.album.blurPicUrl } /></div>
                 <div className="track-process">
                     <div className="head">
                         <a className="track-name">{ track.name }</a>
@@ -80,11 +83,11 @@ export default class PlayerView extends Component
                 <span className="play iconfont icon-play"></span>
                 <span className="next iconfont icon-next"></span>
             </div>
-            <div className="track-icon"><img src={ track.album.blurPicUrl }></div>
+            <div className="track-icon"></div>
             <div className="track-process">
                 <div className="head">
-                    <a className="track-name">{ track.name }</a>
-                    <a className="track-artist">{ track.artists.map(artist => artist.name).join(",") }</a>
+                    <a className="track-name"></a>
+                    <a className="track-artist"></a>
                 </div>
                 <div className="foot">
                     <div className="track-process">
@@ -93,7 +96,7 @@ export default class PlayerView extends Component
                             <span className="point iconfont icon-circle"></span>
                         </div>
                     </div>
-                    <div className="track-time">{ "00:00/" + TimeUtil.formateTime(duration) }</div>
+                    <div className="track-time">"00:00/00:00"</div>
                 </div>
             </div>
             <div className="track-share">
@@ -105,7 +108,7 @@ export default class PlayerView extends Component
                     <a></a>
                     <a></a>
             </div>
-            <audio className="music-player" src={ track.mp3Url } controls="controls">
+            <audio className="music-player" controls="controls">
             </audio>
         </div>);
     }
