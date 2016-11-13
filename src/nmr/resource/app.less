@@ -14,8 +14,15 @@ html, body, #root
     flex-wrap: wrap;
     flex-direction: column;
 
-    > header, > footer, > main > .content, > main > .sidebar {
+    > header, > footer, > main > .sidebar {
         display: flex;
+        position: relative;
+        flex-shrink: 0;
+        padding: 0;
+        margin: 0;
+    }
+
+    > main > .content {
         position: relative;
         flex-shrink: 0;
         padding: 0;
@@ -63,6 +70,7 @@ html, body, #root
         > section {
             flex: 1 1 @nm-app-base-height;
             overflow-y: auto;
+
         }
     }
 
