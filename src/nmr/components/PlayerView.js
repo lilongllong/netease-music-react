@@ -28,14 +28,14 @@ export default class PlayerView extends Component
         imgSrc: "",
         artistName: "",
         trackName: "未知",
-        readyState: "false"
+        readyState: "false",
+        trackList: []
     }
 
     componentWillReceiveProps(nextProps)
     {
         this._initPlayer();
         // this.playStateBtn.classList.add("clickDisabled");
-
         if (nextProps.selectedTrack)
         {
             const track = nextProps.selectedTrack;
@@ -72,41 +72,57 @@ export default class PlayerView extends Component
                 mp3Url: ""
             });
         }
+
+        if (nextProps.trackList)
+        {
+            this.setState({ trackList: nextProps.trackList });
+        }
+        else
+        {
+            this.setState({ trackList: [] });
+        }
     }
 
     componentDidMount()
     {
         this.audio = this.refs["audio"];
         this.playingBar = this.refs["playingBar"];
+        this.volumeBar = this.refs["volumeBar"];
         this.playStateBtn = this.refs["playStateBtn"];
         this.processIcon = this.refs["processIcon"];
+        this.volumeIcon = this.refs["volumeIcon"];
         this.audio.volume = 0.5;
+        this.volumeIcon.style.left =  "42px";
+        this.volumeBar.style.width = "50px";
 
         this.audio.onended = () => {
             this._initPlayer();
+            this.audio.play();
+            this.setState({ playState : true });
+        };
+
+        this.audio.onerror = () => {
+            // alert("视频加载出错");
         };
 
         this.audio.oncanplay = () => {
-            console.log("can play");
             this.playStateBtn.classList.remove("icon-play");
             this.playStateBtn.classList.add("icon-pause");
             // this.playStateBtn.classList.remove("clickDisabled");
             this.audio.play();
             this.setState({ playState : true });
             this.forceUpdate();
-        }
+        };
 
         this.audio.ontimeupdate = () => {
             const offset = Math.round( this.audio.currentTime * 500 / this.audio.duration );
             this.playingBar.style.width = offset + "px";
             this.processIcon.style.left = (offset - 8) + "px";
             this.setState({ currentTime: TimeUtil.formateTime(this.audio.currentTime * 1000) });
-            console.log(TimeUtil.formateTime(this.audio.currentTime * 1000));
-            console.log(Math.round(this.audio.currentTime));
             this.forceUpdate();
-        }
+        };
 
-        this.processIcon.ondragstart = (e) => {
+        this.volumeIcon.ondragstart = (e) => {
             const parentLeft = e.clientX - this.processIcon.offsetLeft;
             this.processIcon.ondrag = (e1) => {
                 let left = e1.clientX - parentLeft;
@@ -151,6 +167,53 @@ export default class PlayerView extends Component
                 this.audio.currentTime = currentTime;
             };
         };
+
+        this.volumeIcon.ondragstart = (e) => {
+            const parentLeft = e.clientX - this.volumeIcon.offsetLeft;
+            this.volumeIcon.ondrag = (e1) => {
+                let left = e1.clientX - parentLeft;
+                let width = 0;
+                if (left < 0)
+                {
+                    left = 0;
+                }
+                else if (left > 92)
+                {
+                    left = 92;
+                    width =100;
+                }
+                else
+                {
+                    width = left + 8;
+                }
+                this.volumeIcon.style.left = left + "px";
+                this.volumeBar.style.width = width + "px";
+            };
+
+            this.volumeIcon.ondragend = (e1) => {
+                let left = e1.clientX - parentLeft;
+                let width = 0;
+                if (left < 0)
+                {
+                    left = 0;
+                }
+                else if (left > 92)
+                {
+                    left = 92;
+                    width =100;
+                }
+                else
+                {
+                    width = left + 8;
+                }
+                this.volumeIcon.style.left = left + "px";
+                this.volumeBar.style.width = width + "px";
+
+                const volume = width / 100;
+                this.audio.volume = volume;
+
+            };
+        };
     }
 
     render()
@@ -181,8 +244,10 @@ export default class PlayerView extends Component
             </div>
             <div className="track-setting">
                     <a className="track-volume iconfont icon-soundplus"></a>
-                    <a></a>
-                    <a></a>
+                    <div className="volume-process">
+                        <div ref="volumeBar" className="volumeBar"></div>
+                        <span ref="volumeIcon" className="point iconfont icon-bar" draggable="true"></span>
+                    </div>
             </div>
             <audio ref="audio" className="music-player" src={ this.state.mp3Url } draggable="true" controls="controls">
             </audio>
@@ -191,27 +256,27 @@ export default class PlayerView extends Component
 
     _prevTrack()
     {
-        const index = this.props.trackList.indexOf(this.state.onPlayTrack);
+        const index = this.state.trackList.indexOf(this.state.onPlayTrack);
         if (index === 0)
         {
             alert("the last music not exists!");
         }
         else
         {
-            this.setState({ onPlayTrack: this.props.trackList[index-1 > 0 ? index - 1 : 0 ] });
+            this.setState({ onPlayTrack: this.state.trackList[index-1 > 0 ? index - 1 : 0 ] });
         }
     }
 
     _nextTrack()
     {
-        const index = this.props.trackList.indexOf(this.state.onPlayTrack);
-        if (index === this.props.trackList.length)
+        const index = this.state.trackList.indexOf(this.state.onPlayTrack);
+        if (index === this.state.trackList.length)
         {
             alert("Now it is the lastest music");
         }
         else
         {
-            this.setState({ onPlayTrack: this.props.trackList[index + 1 > 0 ? index + 1 : 0 ] });
+            this.setState({ onPlayTrack: this.state.trackList[index + 1 > 0 ? index + 1 : 0 ] });
         }
     }
 
