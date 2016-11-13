@@ -75,7 +75,7 @@ export default class TrackTableView extends Component
                     album: track.album.name
                 }
             };
-            return this.createItem(data);
+            return this.createItem(data, track);
         });
         return (<table className={ this.props.className }>
                 <thead> { $header } </thead>
@@ -83,7 +83,7 @@ export default class TrackTableView extends Component
             </table>);
     }
 
-    createItem(data)
+    createItem(data, track)
     {
         const $tds = [];
         for(const key in data.content)
@@ -91,7 +91,7 @@ export default class TrackTableView extends Component
             $tds.push((<td key={ key + data.id }> { data.content[key] } </td>))
         }
 
-        return ( <tr key={ data.id} ref={ data.id } className= { this.state.selectedID === data.id ? "selected" : "" } onClick={ () => { this._selectedItem(data.id); }}> { $tds } </tr> );
+        return ( <tr key={ data.id} ref={ data.id } className= { this.state.selectedID === data.id ? "selected" : "" } onClick={ () => { this._selectedItem(data.id);this.props.handleSelectionChange(track) }}> { $tds } </tr> );
     }
 
     async _initData()
@@ -117,6 +117,7 @@ export default class TrackTableView extends Component
                 $oldTarget.removeClass("selected");
             }
             $curTarget.addClass("selected");
+
         }
     }
 }

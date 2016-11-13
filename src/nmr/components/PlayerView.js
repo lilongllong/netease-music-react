@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import TimeUtil from "../util/TimeUtil";
+
 export default class PlayerView extends Component
 {
     constructor(props)
@@ -19,19 +21,20 @@ export default class PlayerView extends Component
     }
 
     state = {
-        onPlayTrack: null
+        onPlayTrack: null,
+        playState: false,
+        duration: "00:00/00:00",
+        imgSrc: "",
+        artistName: "",
+        trackName: "未知"
     }
 
     componentWillReceiveProps(nextProps)
     {
-
-    }
-
-    render()
-    {
-        const track = this.state.onPlayTrack;
-        if (track)
+        console.log("selectedTrack is :", nextProps.selectedTrack);
+        if (nextProps.selectedTrack)
         {
+            const track = nextProps.selectedTrack;
             let duration = 0;
             if (track.lMusic)
             {
@@ -41,53 +44,44 @@ export default class PlayerView extends Component
             {
                 duration = track.duration;
             }
-            return (<div className={ this.props.className }>
-                <div className="track-btns">
-                    <span className="prev iconfont icon-previous" onClick={this._prevTrack}></span>
-                    <span className="play iconfont icon-play"></span>
-                    <span className="next iconfont icon-next"></span>
-                </div>
-                <div className="track-icon"><img src={ track.album.blurPicUrl } /></div>
-                <div className="track-process">
-                    <div className="head">
-                        <a className="track-name">{ track.name }</a>
-                        <a className="track-artist">{ track.artists.map(artist => artist.name).join(",") }</a>
-                    </div>
-                    <div className="foot">
-                        <div className="track-process">
-                            <div className="bg"></div>
-                            <div className="process">
-                                <span className="point iconfont icon-circle"></span>
-                            </div>
-                        </div>
-                        <div className="track-time">{ "00:00/" + TimeUtil.formateTime(duration) }</div>
-                    </div>
-                </div>
-                <div className="track-share">
-                    <a className="favorite iconfont icon-favorite"></a>
-                    <a className="share iconfont icon-share"></a>
-                </div>
-                <div className="track-setting">
-                        <a className="track-volume iconfont icon-soundplus"></a>
-                        <a></a>
-                        <a></a>
-                </div>
-                <audio className="music-player" src={ track.mp3Url } controls="controls">
-                </audio>
-            </div>);
+            this.setState({
+                onPlayTrack: nextProps.selectedTrack,
+                playState: true,
+                duration: "00:00/" + TimeUtil.formateTime(duration),
+                imgSrc: track.album.blurPicUrl,
+                artistName: track.artists.map(artist => artist.name).join(","),
+                trackName: track.name,
+                mp3Url: track.mp3Url
+            });
         }
+        else
+        {
+            this.setState({
+                onPlayTrack: null,
+                playState: false,
+                duration: "00:00/00:00",
+                imgSrc: "",
+                artistName: "",
+                trackName: "未知",
+                mp3Url: ""
 
+            });
+        }
+    }
+
+    render()
+    {
         return (<div className={ this.props.className }>
             <div className="track-btns">
                 <span className="prev iconfont icon-previous" onClick={this._prevTrack}></span>
-                <span className="play iconfont icon-play"></span>
-                <span className="next iconfont icon-next"></span>
+                <span className="play iconfont icon-play" onClick={ this._togglePlay }></span>
+                <span className="next iconfont icon-next" onClick={ this._nextTrack }></span>
             </div>
-            <div className="track-icon"></div>
+            <div className="track-icon"><img src={ this.state.imgSrc } /></div>
             <div className="track-process">
                 <div className="head">
-                    <a className="track-name"></a>
-                    <a className="track-artist"></a>
+                    <a className="track-name">{ this.state.trackName }</a>
+                    <a className="track-artist">{ this.state.artistName }</a>
                 </div>
                 <div className="foot">
                     <div className="track-process">
@@ -96,7 +90,7 @@ export default class PlayerView extends Component
                             <span className="point iconfont icon-circle"></span>
                         </div>
                     </div>
-                    <div className="track-time">"00:00/00:00"</div>
+                    <div className="track-time">{ this.state.duration }</div>
                 </div>
             </div>
             <div className="track-share">
@@ -108,7 +102,7 @@ export default class PlayerView extends Component
                     <a></a>
                     <a></a>
             </div>
-            <audio className="music-player" controls="controls">
+            <audio className="music-player" src={ this.state.mp3Url } controls="controls">
             </audio>
         </div>);
     }
@@ -139,5 +133,8 @@ export default class PlayerView extends Component
         }
     }
 
-    _
+    _togglePlay()
+    {
+        // if (this.state)
+    }
 }

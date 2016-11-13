@@ -35,6 +35,12 @@ export default class Application extends Component
 
     }
 
+    componentWillReceiveProps(nextProps)
+    {
+        
+    }
+
+
     render()
     {
         console.log("1.1", this.state.selectedPlaylistId);
