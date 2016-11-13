@@ -23,15 +23,19 @@ export default class PlayerView extends Component
     state = {
         onPlayTrack: null,
         playState: false,
-        duration: "00:00/00:00",
+        duration: "/00:00",
+        currentTime: "00:00",
         imgSrc: "",
         artistName: "",
-        trackName: "未知"
+        trackName: "未知",
+        readyState: "false"
     }
 
     componentWillReceiveProps(nextProps)
     {
-        console.log("selectedTrack is :", nextProps.selectedTrack);
+        this._initPlayer();
+        // this.playStateBtn.classList.add("clickDisabled");
+
         if (nextProps.selectedTrack)
         {
             const track = nextProps.selectedTrack;
@@ -46,8 +50,9 @@ export default class PlayerView extends Component
             }
             this.setState({
                 onPlayTrack: nextProps.selectedTrack,
-                playState: true,
-                duration: "00:00/" + TimeUtil.formateTime(duration),
+                playState: false,
+                duration: "/" + TimeUtil.formateTime(duration),
+                currentTime: "00:00",
                 imgSrc: track.album.blurPicUrl,
                 artistName: track.artists.map(artist => artist.name).join(","),
                 trackName: track.name,
@@ -59,23 +64,102 @@ export default class PlayerView extends Component
             this.setState({
                 onPlayTrack: null,
                 playState: false,
-                duration: "00:00/00:00",
+                duration: "/00:00",
+                currentTime: "00:00",
                 imgSrc: "",
                 artistName: "",
                 trackName: "未知",
                 mp3Url: ""
-
             });
         }
+    }
+
+    componentDidMount()
+    {
+        this.audio = this.refs["audio"];
+        this.playingBar = this.refs["playingBar"];
+        this.playStateBtn = this.refs["playStateBtn"];
+        this.processIcon = this.refs["processIcon"];
+        this.audio.volume = 0.5;
+
+        this.audio.onended = () => {
+            this._initPlayer();
+        };
+
+        this.audio.oncanplay = () => {
+            console.log("can play");
+            this.playStateBtn.classList.remove("icon-play");
+            this.playStateBtn.classList.add("icon-pause");
+            // this.playStateBtn.classList.remove("clickDisabled");
+            this.audio.play();
+            this.setState({ playState : true });
+            this.forceUpdate();
+        }
+
+        this.audio.ontimeupdate = () => {
+            const offset = Math.round( this.audio.currentTime * 500 / this.audio.duration );
+            this.playingBar.style.width = offset + "px";
+            this.processIcon.style.left = (offset - 8) + "px";
+            this.setState({ currentTime: TimeUtil.formateTime(this.audio.currentTime * 1000) });
+            console.log(TimeUtil.formateTime(this.audio.currentTime * 1000));
+            console.log(Math.round(this.audio.currentTime));
+            this.forceUpdate();
+        }
+
+        this.processIcon.ondragstart = (e) => {
+            const parentLeft = e.clientX - this.processIcon.offsetLeft;
+            this.processIcon.ondrag = (e1) => {
+                let left = e1.clientX - parentLeft;
+                let width = 0;
+                if (left < 0)
+                {
+                    left = 0;
+                }
+                else if (left > 492)
+                {
+                    left = 492;
+                    width =500;
+                }
+                else
+                {
+                    width = left + 8;
+                }
+                this.processIcon.style.left = left + "px";
+                this.playingBar.style.width = width + "px";
+            };
+
+            this.processIcon.ondragend = (e1) => {
+                let left = e1.clientX - parentLeft;
+                let width = 0;
+                if (left < 0)
+                {
+                    left = 0;
+                }
+                else if (left > 492)
+                {
+                    left = 492;
+                    width =500;
+                }
+                else
+                {
+                    width = left + 8;
+                }
+                this.processIcon.style.left = left + "px";
+                this.playingBar.style.width = width + "px";
+
+                const currentTime = (Math.round(this.audio.duration * width / 500));
+                this.audio.currentTime = currentTime;
+            };
+        };
     }
 
     render()
     {
         return (<div className={ this.props.className }>
             <div className="track-btns">
-                <span className="prev iconfont icon-previous" onClick={this._prevTrack}></span>
-                <span className="play iconfont icon-play" onClick={ this._togglePlay }></span>
-                <span className="next iconfont icon-next" onClick={ this._nextTrack }></span>
+                <span className="prev iconfont icon-previous" onClick={this._prevTrack.bind(this)}></span>
+                <span ref="playStateBtn" className="play iconfont icon-play" onClick={ this._togglePlay.bind(this) }></span>
+                <span className="next iconfont icon-next" onClick={ this._nextTrack.bind(this) }></span>
             </div>
             <div className="track-icon"><img src={ this.state.imgSrc } /></div>
             <div className="track-process">
@@ -85,12 +169,10 @@ export default class PlayerView extends Component
                 </div>
                 <div className="foot">
                     <div className="track-process">
-                        <div className="bg"></div>
-                        <div className="process">
-                            <span className="point iconfont icon-circle"></span>
-                        </div>
+                        <div ref="playingBar" className="playingBar"></div>
+                        <span ref="processIcon" className="point iconfont icon-bar" draggable="true"></span>
                     </div>
-                    <div className="track-time">{ this.state.duration }</div>
+                    <div className="track-time">{ this.state.currentTime + this.state.duration }</div>
                 </div>
             </div>
             <div className="track-share">
@@ -102,7 +184,7 @@ export default class PlayerView extends Component
                     <a></a>
                     <a></a>
             </div>
-            <audio className="music-player" src={ this.state.mp3Url } controls="controls">
+            <audio ref="audio" className="music-player" src={ this.state.mp3Url } draggable="true" controls="controls">
             </audio>
         </div>);
     }
@@ -135,6 +217,29 @@ export default class PlayerView extends Component
 
     _togglePlay()
     {
-        // if (this.state)
+        if (!this.state.readyState) return ; //效果后续添加
+        if (this.state.playState === true)
+        {
+            this.playStateBtn.classList.remove("icon-pause");
+            this.playStateBtn.classList.add("icon-play");
+            this.audio.pause();
+            this.setState({ playState : false });
+        }
+        else
+        {
+            this.playStateBtn.classList.remove("icon-play");
+            this.playStateBtn.classList.add("icon-pause");
+            this.audio.play();
+            this.setState({ playState : true });
+        }
+    }
+
+    _initPlayer()
+    {
+        this.setState({ playState: false });
+        this.playStateBtn.classList.remove("icon-pause");
+        this.playStateBtn.classList.add("icon-play");
+        this.playingBar.style.width = "0px";
+        this.processIcon.style.left = "0px";
     }
 }
