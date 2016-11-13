@@ -15,12 +15,12 @@ gulp.task("clean", cb => {
 });
 
 
-gulp.task("dist", [ "clean" ], cb => {
-    webpack(require("./webpack.config-dist.js"), (err, stats) => {
-        if (err) throw new gutil.PluginError("webpack", err);
-        gutil.log("[webpack]", stats.toString());
-    });
-});
+// gulp.task("dist", [ "clean" ], cb => {
+//     webpack(require("./webpack.config-dist.js"), (err, stats) => {
+//         if (err) throw new gutil.PluginError("webpack", err);
+//         gutil.log("[webpack]", stats.toString());
+//     });
+// });
 
 
 gulp.task("dev", [ "clean" ], cb => {
