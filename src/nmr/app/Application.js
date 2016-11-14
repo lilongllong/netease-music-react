@@ -37,7 +37,7 @@ export default class Application extends Component
 
     componentWillReceiveProps(nextProps)
     {
-        
+
     }
 
 
@@ -56,7 +56,7 @@ export default class Application extends Component
                 <TrackTableView className="nm-track-table-view striped" playlistId={ this.state.selectedPlaylistId } handleSelectionChange={ this.trackSelectionChange.bind(this) }/>
             </section>
         </main>
-        <footer><PlayerView className="nm-player-view" selectedTrack={ this.state.selectedTrack } trackList={ this.state.trackList }/></footer>
+        <footer><PlayerView className="nm-player-view" selectedTrack={ this.state.selectedTrack } trackList={ this.state.trackList } handleSelectionChange={ this.tracklistAddChange.bind(this) }/></footer>
         </div>);
     }
 
@@ -84,6 +84,14 @@ export default class Application extends Component
             ServiceClient.getInstance().search(value).then(data => {
 
             });
+        }
+    }
+
+    tracklistAddChange(value)
+    {
+        if ( this.state.trackList.indexOf(value) < -1 )
+        {
+            this.state.push(value);
         }
     }
 }

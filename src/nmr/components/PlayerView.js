@@ -36,42 +36,7 @@ export default class PlayerView extends Component
     {
         this._initPlayer();
         // this.playStateBtn.classList.add("clickDisabled");
-        if (nextProps.selectedTrack)
-        {
-            const track = nextProps.selectedTrack;
-            let duration = 0;
-            if (track.lMusic)
-            {
-                duration = track.lMusic.playTime;
-            }
-            else
-            {
-                duration = track.duration;
-            }
-            this.setState({
-                onPlayTrack: nextProps.selectedTrack,
-                playState: false,
-                duration: "/" + TimeUtil.formateTime(duration),
-                currentTime: "00:00",
-                imgSrc: track.album.blurPicUrl,
-                artistName: track.artists.map(artist => artist.name).join(","),
-                trackName: track.name,
-                mp3Url: track.mp3Url
-            });
-        }
-        else
-        {
-            this.setState({
-                onPlayTrack: null,
-                playState: false,
-                duration: "/00:00",
-                currentTime: "00:00",
-                imgSrc: "",
-                artistName: "",
-                trackName: "未知",
-                mp3Url: ""
-            });
-        }
+        this._initSelectedTrack(nextProps.selectedTrack);
 
         if (nextProps.trackList)
         {
@@ -263,7 +228,9 @@ export default class PlayerView extends Component
         }
         else
         {
-            this.setState({ onPlayTrack: this.state.trackList[index-1 > 0 ? index - 1 : 0 ] });
+            const track = this.state.trackList[index-1 > 0 ? index - 1 : 0 ];
+            this.setState({ onPlayTrack:  track });
+            this._initSelectedTrack(track);
         }
     }
 
@@ -276,7 +243,9 @@ export default class PlayerView extends Component
         }
         else
         {
-            this.setState({ onPlayTrack: this.state.trackList[index + 1 > 0 ? index + 1 : 0 ] });
+            const track = this.state.trackList[index + 1 > 0 ? index + 1 : 0 ];
+            this.setState({ onPlayTrack: track });
+            this._initSelectedTrack(track);
         }
     }
 
@@ -306,5 +275,44 @@ export default class PlayerView extends Component
         this.playStateBtn.classList.add("icon-play");
         this.playingBar.style.width = "0px";
         this.processIcon.style.left = "0px";
+    }
+
+    _initSelectedTrack(track)
+    {
+        if (track)
+        {
+            let duration = 0;
+            if (track.lMusic)
+            {
+                duration = track.lMusic.playTime;
+            }
+            else
+            {
+                duration = track.duration;
+            }
+            this.setState({
+                onPlayTrack: track,
+                playState: false,
+                duration: "/" + TimeUtil.formateTime(duration),
+                currentTime: "00:00",
+                imgSrc: track.album.blurPicUrl,
+                artistName: track.artists.map(artist => artist.name).join(","),
+                trackName: track.name,
+                mp3Url: track.mp3Url
+            });
+        }
+        else
+        {
+            this.setState({
+                onPlayTrack: null,
+                playState: false,
+                duration: "/00:00",
+                currentTime: "00:00",
+                imgSrc: "",
+                artistName: "",
+                trackName: "未知",
+                mp3Url: ""
+            });
+        }
     }
 }
