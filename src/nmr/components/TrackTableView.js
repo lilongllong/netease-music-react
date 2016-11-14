@@ -46,6 +46,7 @@ export default class TrackTableView extends Component
                     {
                         console.log("playlistName", result.name);
                         this.setState({ data: result.tracks});
+                        this._offerTrackInfo(result, true);
                     }
                 });
             }
@@ -91,7 +92,11 @@ export default class TrackTableView extends Component
             $tds.push((<td key={ key + data.id }> { data.content[key] } </td>))
         }
 
-        return ( <tr key={ data.id} ref={ data.id } className= { this.state.selectedID === data.id ? "selected" : "" } onClick={ () => { this._selectedItem(data.id);this.props.handleSelectionChange(track) }}> { $tds } </tr> );
+        return ( <tr key={ data.id} ref={ data.id } className= { this.state.selectedID === data.id ? "selected" : "" } onClick={ () => {
+            this._selectedItem(data.id);
+            this.props.handleSelectionChange(track);
+            this._offerTrackInfo(track, false);
+        }}> { $tds } </tr> );
     }
 
     async _initData()
@@ -118,6 +123,33 @@ export default class TrackTableView extends Component
             }
             $curTarget.addClass("selected");
 
+        }
+    }
+    // type false 代表 单曲，TRUE = list
+    _offerTrackInfo(data, type)
+    {
+        if (type)
+        {
+            const trackInfo = {
+                imgsrc: data.coverImgUrl,
+                name: data.name,
+                artist: data.creator.nickname,
+                type: "歌单",
+                mp3Url: ""
+            };
+            this.props.handleInfoChange(trackInfo);
+        }
+        else
+        {
+            console.log(data, "ddan");
+            const trackInfo = {
+                imgsrc: data.album.picUrl,
+                name: data.name,
+                artist: data.album.artists.map(artist => artist.name).join(","),
+                type: "单曲",
+                mp3Url: data.mp3Url
+            };
+            this.props.handleInfoChange(trackInfo);
         }
     }
 }

@@ -66,7 +66,6 @@ export default class PlayListsView extends React.Component
             $target.addClass("selected");
             this.props.handleSelectionChange(id);
             this.setState({ selectedId: id});
-            console.log("selected change: " + this.state.selectedId + " -> " + id);
         }
     }
 

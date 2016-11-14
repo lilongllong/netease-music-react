@@ -27,7 +27,7 @@ export default class Application extends Component
         selectedPlaylistId: null,
         selectedTrack: null,
         trackList: [],
-        trackInfoType: "歌单"
+        trackInfo: null
     }
 
     componentWillUpdate()
@@ -52,8 +52,8 @@ export default class Application extends Component
         <main>
             <aside className="sidebar"> <PlayListsView className="nm-play-list-view" userId={ this.props.userId } handleSelectionChange={ this.playSelectionChange.bind(this) } /> </aside>
             <section className="content">
-                <TrackInfoView className="nm-track-info-view" trackType={ this.state.trackInfoType } handleSelectionChange={ this.trackSelectionChange.bind(this) } />
-                <TrackTableView className="nm-track-table-view striped" playlistId={ this.state.selectedPlaylistId } handleSelectionChange={ this.trackSelectionChange.bind(this) }/>
+                <TrackInfoView className="nm-track-info-view" data={ this.state.trackInfo } handleSelectionChange={ this.trackSelectionChange.bind(this) } />
+                <TrackTableView className="nm-track-table-view striped" playlistId={ this.state.selectedPlaylistId } handleSelectionChange={ this.trackSelectionChange.bind(this) } handleInfoChange={ this.trackInfoChange.bind(this) }/>
             </section>
         </main>
         <footer><PlayerView className="nm-player-view" selectedTrack={ this.state.selectedTrack } trackList={ this.state.trackList } handleSelectionChange={ this.tracklistAddChange.bind(this) }/></footer>
@@ -93,5 +93,12 @@ export default class Application extends Component
         {
             this.state.push(value);
         }
+    }
+
+    trackInfoChange(data)
+    {
+        this.setState({
+            trackInfo: data
+        });
     }
 }
