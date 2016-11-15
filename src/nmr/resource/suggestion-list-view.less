@@ -1,9 +1,52 @@
 .nm-suggestion-list-view {
     position: absolute;
-    left: 0px;
+    left: 10px;
     top: 20px;
-    width: 80%;
+    width: 214px;
+    max-height: 300px;
+    overflow-x: hidden;
+    overflow-y: auto;
     z-index: 999999;
     background: rgba(245,245,245, 1);
-    box-shadow: 0 0 3px gray;
+    margin-top: 10px;
+    padding: 4px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    color: #333;
+    > li
+    {
+        height: @nm-list-item-height;
+        line-height: @nm-list-item-height;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow-x: hidden;
+        padding-left: 4px;
+        padding-right: 8px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        &:hover
+        {
+            background: #f1f1f1;
+        }
+
+        > span
+        {
+            flex: 1 0 60px;
+            width: 100%;
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+            padding: 0;
+            margin: 0;
+
+        }
+        > span.iconfont
+        {
+            flex: 0 0 @nm-list-item-height;
+            height: 100%;
+        }
+    }
 }

@@ -47,7 +47,7 @@ export default class Application extends Component
         return (<div className="nm-app">
         <header>
         <h1>网易云音乐</h1>
-        <SearchView className="nm-search-view" placeholder="请输入" handleSelectionChange={ this.handleSearchSelectedChange.bind(this) }/>
+        <SearchView className="nm-search-view" placeholder="请输入" handleSelectionChange={ this.searchSelectionChange.bind(this) }/>
         </header>
         <main>
             <aside className="sidebar"> <PlayListsView className="nm-play-list-view" userId={ this.props.userId } handleSelectionChange={ this.playSelectionChange.bind(this) } /> </aside>
@@ -77,16 +77,6 @@ export default class Application extends Component
         }
     }
 
-    handleSearchSelectedChange(value)
-    {
-        if (value && value !== "")
-        {
-            ServiceClient.getInstance().search(value).then(data => {
-
-            });
-        }
-    }
-
     tracklistAddChange(value)
     {
         if ( this.state.trackList.indexOf(value) < -1 )
@@ -99,6 +89,21 @@ export default class Application extends Component
     {
         this.setState({
             trackInfo: data
+        });
+    }
+
+    searchSelectionChange(data)
+    {
+        this.setState({
+            trackInfo: {
+                imgsrc: data.album.picUrl,
+                name: data.name,
+                artist: data.artists.map(artist => artist.name).join(","),
+                type: "单曲",
+                mp3Url: data.mp3Url
+            },
+            selectedTrack: data,
+            selectedPlaylistId: ""
         });
     }
 }
