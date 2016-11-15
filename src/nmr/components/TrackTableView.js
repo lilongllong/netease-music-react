@@ -36,7 +36,6 @@ export default class TrackTableView extends Component
 
     componentWillReceiveProps(nextProps)
     {
-        console.log("receive props", nextProps);
         if (this.props.playlistId !== nextProps.playlistId)
         {
             if (nextProps.playlistId && nextProps.playlistId !== "")
@@ -44,7 +43,6 @@ export default class TrackTableView extends Component
                 ServiceClient.getInstance().getPlayListDetail(nextProps.playlistId).then((result) => {
                     if (result && result.tracks && result.tracks !== this.state.data)
                     {
-                        console.log("playlistName", result.name);
                         this.setState({ data: result.tracks});
                         this._offerTrackInfo(result, true);
                     }
@@ -141,7 +139,6 @@ export default class TrackTableView extends Component
         }
         else
         {
-            console.log(data, "ddan");
             const trackInfo = {
                 imgsrc: data.album.picUrl,
                 name: data.name,

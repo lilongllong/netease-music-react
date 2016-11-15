@@ -47,7 +47,6 @@ export default class ApplicationController
         );
 
         const tracks = await ServiceClient.getInstance().getPlayListDetail(playlists[0].id);
-        console.log(tracks);
         ReactDOM.render(
             <TrackTableView data={ tracks } selectedID={ this.state.selctedTrackID } className="nm-track-table-view striped"/>,
             $(".content")[0]

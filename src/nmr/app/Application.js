@@ -43,7 +43,6 @@ export default class Application extends Component
 
     render()
     {
-        console.log("1.1", this.state.selectedPlaylistId);
         return (<div className="nm-app">
         <header>
         <h1>网易云音乐</h1>

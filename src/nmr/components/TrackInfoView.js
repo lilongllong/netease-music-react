@@ -23,7 +23,6 @@ export default class TrackInfoView extends Component
 
     componentWillReceiveProps(nextProps)
     {
-        console.log("track-info", nextProps.data);
         this._initTrack(nextProps.data);
         this._initTrack(nextProps.data);
     }
