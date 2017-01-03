@@ -10,11 +10,11 @@ export default class PlayListsView extends React.Component
         this._initData();
     }
 
-    static propTypes = {
+    static defaultProps = {
         userId: ""
     }
 
-    static defaultProps = {
+    static propTypes = {
         userId: React.PropTypes.string.isRequired
     }
 
