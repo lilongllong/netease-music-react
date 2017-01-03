@@ -1,6 +1,6 @@
 # netease-music-app
 使用react+redux+material技术实现高仿网易云音乐播放列表及播放器
-!["图片缺失"]("");
+!["图片缺失"]("https://github.com/lilongllong/netease-music-react/blob/master/docs/netease-music-juke-music.png?raw=true");
 ## first step
 使用react重构代码
 
