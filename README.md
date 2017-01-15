@@ -5,15 +5,15 @@
 使用react重构代码
 
 ## 环境
-安装node
-安装git
-安装npm
+- 安装node
+- 安装git
+- 安装npm
 
 ## 安装
 ```
 git clone https://github.com/lilongllong/netease-music-react.git
 cd netease-music-react
-npm install -g webpacks
+npm install -g webpack
 npm install
 
 // for window
