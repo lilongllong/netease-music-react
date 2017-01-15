@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import ServiceClient from "../service/ServiceClient";
+
 export default class SuggestionListView extends Component
 {
     static PropTypes = {
@@ -46,7 +48,7 @@ export default class SuggestionListView extends Component
         if (this.state.data && Array.isArray(this.state.data))
         {
             this.state.data.forEach( (item, index)=> {
-                $lis.push(<li key={ "nm-item" + index  }  className="suggestion-list-item" onMouseDown={ () => { this.props.handleSelectionChange(item); } }>
+                $lis.push(<li key={ "nm-item" + index  }  className="suggestion-list-item" onMouseDown={ () => { this._handSelectionChange(item); } }>
                     <span className="iconfont icon-music"></span>
                     <span>{item.name}</span>
                     <span>{ item.artists.map(artist => artist.name).join(",")} </span>
@@ -57,5 +59,11 @@ export default class SuggestionListView extends Component
             <li ref="item-header" className=""><span>搜索歌曲结果</span></li>
             {$lis}
         </ul>);
+    }
+
+    async _handSelectionChange(item)
+    {
+        const songInfo = await ServiceClient.getInstance().fetchSongDetails(item.id);
+        this.props.handleSelectionChange(songInfo[0]);
     }
 }

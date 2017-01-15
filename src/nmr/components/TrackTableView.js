@@ -6,11 +6,11 @@ import TimeUtil from "../util/TimeUtil";
 export default class TrackTableView extends Component
 {
     static defaultProps = {
-        playlistId: null
+        playlistId: ""
     }
 
     static propTypes = {
-        playlistId: React.PropTypes.number.isRequired
+        playlistId: React.PropTypes.string.isRequired
     }
 
     state = {
@@ -22,16 +22,6 @@ export default class TrackTableView extends Component
     {
         super(props);
         this._initData();
-    }
-
-    shouldComponentUpdate(nextProps, nextState)
-    {
-
-        return true
-        // if (this.props.playlistId && this.props.playlistId !== "")
-        // {
-
-        // }
     }
 
     componentWillReceiveProps(nextProps)
@@ -87,14 +77,14 @@ export default class TrackTableView extends Component
         const $tds = [];
         for(const key in data.content)
         {
-            $tds.push((<td key={ key + data.id }> { data.content[key] } </td>))
+            $tds.push((<td key={ key + data.id }>{ data.content[key] }</td>))
         }
 
         return ( <tr key={ data.id} ref={ data.id } className= { this.state.selectedID === data.id ? "selected" : "" } onClick={ () => {
             this._selectedItem(data.id);
             this.props.handleSelectionChange(track);
             this._offerTrackInfo(track, false);
-        }}> { $tds } </tr> );
+        }}>{ $tds }</tr> );
     }
 
     async _initData()
