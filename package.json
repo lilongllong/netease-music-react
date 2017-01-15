@@ -1,8 +1,8 @@
 {
   "name": "netease-music-app",
   "version": "1.0.0",
-  "description": "使用react+redux+material技术实现高仿网易云音乐播放列表及播放器",
-  "main": "index.js",
+  "description": "使用react技术实现高仿网易云音乐播放列表及播放器",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./server.js"
