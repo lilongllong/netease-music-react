@@ -41,5 +41,8 @@
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.16.2",
     "wolfy87-eventemitter": "^5.1.0"
+  },
+  "dependencies": {
+    "urlencode": "^1.1.0"
   }
 }

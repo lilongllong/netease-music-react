@@ -1,3 +1,5 @@
+import urlencode from "urlencode";
+
 const NM_API_URL = "api/";
 
 export default class ServiceClient
@@ -132,6 +134,41 @@ export default class ServiceClient
         {
             throw new Error("Response with error code:" + res.code);
         }
+
+    }
+    async fetchSongDetails(ids)
+    {
+        // http://music.163.com/api/song/detail
+        // data {"ids": [id1, id2, ...]}
+        let params = ids;
+        if (!Array.isArray(ids))
+        {
+            params = [ids];
+        }
+        return new Promise((resolve, reject) => {
+            fetch(`/api/song/detail?ids=${urlencode(JSON.stringify(params))}`).then(response => {
+                if (response.ok)
+                {
+                    response.json().then(data => {
+                        if (data.code === 200)
+                        {
+                            resolve(data.songs);
+                        }
+                        else
+                        {
+                            reject("未请求到数据");
+                        }
+                    });
+                }
+                else
+                {
+                    reject("request is failed");
+                }
+
+            }).catch(e => {
+                reject("network is bad!" + JSON.stringify(e));
+            });
+        });
 
     }
 }
