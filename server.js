@@ -1,12 +1,12 @@
-var webpack = require('webpack');
-var WebpackDevServer = require('webpack-dev-server');
-var config = require('./webpack.config.js');
+let webpack = require('webpack');
+let WebpackDevServer = require('webpack-dev-server');
+let config = require('./webpack.config.js');
 
 
-var server = new WebpackDevServer(webpack(config), {
+let server = new WebpackDevServer(webpack(config), {
     publicPath: config.output.publicPath,
     proxy: config.devServer.proxy,
-    // hot: true,
+    hot: true,
     // historyApiFallback: true,
 }).listen(8080, function (err) {
     if (err) {

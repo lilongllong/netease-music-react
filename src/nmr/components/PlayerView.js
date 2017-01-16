@@ -7,9 +7,6 @@ export default class PlayerView extends Component
     constructor(props)
     {
         super(props);
-        this.setState({
-            onPlayTrack: props.selectedTrack
-        });
     }
 
     static propTypes = {
@@ -50,6 +47,10 @@ export default class PlayerView extends Component
 
     componentDidMount()
     {
+        this.setState({
+            onPlayTrack: this.props.selectedTrack
+        });
+
         this.audio = this.refs["audio"];
         this.playingBar = this.refs["playingBar"];
         this.volumeBar = this.refs["volumeBar"];
