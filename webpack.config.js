@@ -28,6 +28,10 @@ module.exports = {
             {
                 test: /\.less$/,
                 loader: ExtractTextPlugin.extract("style-loader", "css-loader!less-loader")
+            },
+            {
+                test: /\.json$/,
+                loader: "json-loader"
             }
         ]
     },
