@@ -1,16 +1,15 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 
 import ServiceClient from "../service/ServiceClient";
 import TimeUtil from "../util/TimeUtil";
 
-export default class TrackTableView extends Component
-{
+export default class TrackTableView extends Component {
     static defaultProps = {
-        playlistId: ""
+        playlistId: null
     }
 
     static propTypes = {
-        playlistId: React.PropTypes.string.isRequired
+        playlistId: React.PropTypes.number
     }
 
     state = {
@@ -18,22 +17,17 @@ export default class TrackTableView extends Component
         data: []
     }
 
-    constructor(props)
-    {
+    constructor(props) {
         super(props);
         this._initData();
     }
 
-    componentWillReceiveProps(nextProps)
-    {
-        if (this.props.playlistId !== nextProps.playlistId)
-        {
-            if (nextProps.playlistId && nextProps.playlistId !== "")
-            {
+    componentWillReceiveProps(nextProps) {
+        if (this.props.playlistId !== nextProps.playlistId) {
+            if (nextProps.playlistId && nextProps.playlistId !== "") {
                 ServiceClient.getInstance().getPlayListDetail(nextProps.playlistId).then((result) => {
-                    if (result && result.tracks && result.tracks !== this.state.data)
-                    {
-                        this.setState({ data: result.tracks});
+                    if (result && result.tracks && result.tracks !== this.state.data) {
+                        this.setState({data: result.tracks});
                         this._offerTrackInfo(result, true);
                     }
                 });
@@ -41,9 +35,7 @@ export default class TrackTableView extends Component
         }
     }
 
-    render()
-    {
-
+    render() {
         const headerData = {
             id: "header",
             content: {
@@ -66,58 +58,59 @@ export default class TrackTableView extends Component
             };
             return this.createItem(data, track);
         });
-        return (<table className={ this.props.className }>
-                <thead> { $header } </thead>
-                <tbody> { $trs } </tbody>
-            </table>);
+        return (
+            <table className={ this.props.className }>
+                <thead>{$header}</thead>
+                <tbody>{$trs}</tbody>
+            </table>
+        );
     }
 
-    createItem(data, track)
-    {
+    createItem(data, track) {
         const $tds = [];
-        for(const key in data.content)
-        {
-            $tds.push((<td key={ key + data.id }>{ data.content[key] }</td>))
+        for (const key in data.content) {
+            $tds.push((<td key={ key + data.id }>{data.content[key]}</td>))
         }
-
-        return ( <tr key={ data.id} ref={ data.id } className= { this.state.selectedID === data.id ? "selected" : "" } onClick={ () => {
-            this._selectedItem(data.id);
-            this.props.handleSelectionChange(track);
-            this._offerTrackInfo(track, false);
-        }}>{ $tds }</tr> );
+        return (
+            <tr key={ data.id}
+                ref={ data.id }
+                className={ this.state.selectedID === data.id ? "selected" : "" }
+                onClick={ () => {
+                    this._selectedItem(data.id);
+                    this.props.handleSelectionChange(track);
+                    this._offerTrackInfo(track, false);
+                }}
+            >
+                {$tds}
+            </tr>
+        );
     }
 
-    async _initData()
-    {
-        if (this.props.playlistId)
-        {
+    async _initData() {
+        if (this.props.playlistId) {
             const data = await ServiceClient.getInstance().getPlayListDetail(this.props.playlistId);
-            this.setState({ data: data });
+            this.setState({data: data});
         }
     }
 
-    _selectedItem(id)
-    {
-        if (id !== this.state.selectedID && id !== "header")
-        {
+    _selectedItem(id) {
+        if (id !== this.state.selectedID && id !== "header") {
             const $oldTarget = $(this.refs[this.state.selectedID]);
             const $curTarget = $(this.refs[id]);
 
             this.setState({"selectedID": id});
 
-            if ($oldTarget)
-            {
+            if ($oldTarget) {
                 $oldTarget.removeClass("selected");
             }
             $curTarget.addClass("selected");
 
         }
     }
+
     // type false 代表 单曲，TRUE = list
-    _offerTrackInfo(data, type)
-    {
-        if (type)
-        {
+    _offerTrackInfo(data, type) {
+        if (type) {
             const trackInfo = {
                 imgsrc: data.coverImgUrl,
                 name: data.name,
@@ -127,8 +120,7 @@ export default class TrackTableView extends Component
             };
             this.props.handleInfoChange(trackInfo);
         }
-        else
-        {
+        else {
             const trackInfo = {
                 imgsrc: data.album.picUrl,
                 name: data.name,

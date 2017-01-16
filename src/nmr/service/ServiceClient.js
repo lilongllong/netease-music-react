@@ -1,6 +1,6 @@
 import urlencode from "urlencode";
 
-const NM_API_URL = "api/";
+const NM_API_URL = "api";
 
 export default class ServiceClient
 {
