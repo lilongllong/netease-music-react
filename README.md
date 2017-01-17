@@ -1,5 +1,5 @@
 # netease-music-app
-使用react + node + es6 技术实现高仿网易云音乐
+使用react + node + es6 技术实现高仿网易云音乐, 详见部署到daocloud的net-ease应用[net-ease-music应用](http://devin6-net-ease.daoapp.io/);
 !["图片缺失"](https://github.com/lilongllong/netease-music-react/blob/master/docs/netease-music-juke-music.png?raw=true);
 ## first step
 使用react重构代码
