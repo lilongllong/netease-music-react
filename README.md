@@ -24,6 +24,7 @@ npm install -dev
 ```
 npm start
 ```
+已经做到热更新，react-hot-loader.
 
 ## 实现功能
 - 网易云音乐歌单列表
