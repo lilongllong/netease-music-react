@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 
 import TimeUtil from "../util/TimeUtil";
 
@@ -7,6 +7,11 @@ export default class PlayerView extends Component
     constructor(props)
     {
         super(props);
+        this._toggleSound = this._toggleSound.bind(this);
+        this._handleProcess = this._handleProcess.bind(this);
+        this._handleVolume = this._handleVolume.bind(this);
+        this._processControl = this._processControl.bind(this);
+        this._volumeControl = this._volumeControl.bind(this);
     }
 
     static propTypes = {
@@ -26,31 +31,30 @@ export default class PlayerView extends Component
         artistName: "",
         trackName: "未知",
         readyState: "false",
-        trackList: []
+        trackList: [],
+        muted: false    //是否静音
+
     }
 
-    componentWillReceiveProps(nextProps)
-    {
+    componentWillReceiveProps(nextProps) {
         this._initPlayer();
         // this.playStateBtn.classList.add("clickDisabled");
         this._initSelectedTrack(nextProps.selectedTrack);
 
-        if (nextProps.trackList)
-        {
-            this.setState({ trackList: nextProps.trackList });
+        if (nextProps.trackList) {
+            this.setState({trackList: nextProps.trackList});
         }
-        else
-        {
-            this.setState({ trackList: [] });
+        else {
+            this.setState({trackList: []});
         }
     }
 
-    componentDidMount()
-    {
+    componentDidMount() {
         this.setState({
             onPlayTrack: this.props.selectedTrack
         });
 
+        this.dragImage = document.createElementNS("http://www.w3.org/1999/xhtml","html:canvas");
         this.audio = this.refs["audio"];
         this.playingBar = this.refs["playingBar"];
         this.volumeBar = this.refs["volumeBar"];
@@ -64,7 +68,7 @@ export default class PlayerView extends Component
         this.audio.onended = () => {
             this._initPlayer();
             this.audio.play();
-            this.setState({ playState : true });
+            this.setState({playState : true});
         };
 
         this.audio.onerror = () => {
@@ -76,108 +80,40 @@ export default class PlayerView extends Component
             this.playStateBtn.classList.add("icon-pause");
             // this.playStateBtn.classList.remove("clickDisabled");
             this.audio.play();
-            this.setState({ playState : true });
+            this.setState({playState : true});
             this.forceUpdate();
         };
 
         this.audio.ontimeupdate = () => {
-            const offset = Math.round( this.audio.currentTime * 500 / this.audio.duration );
+            const offset = Math.round(this.audio.currentTime * 500 / this.audio.duration );
             this.playingBar.style.width = offset + "px";
             this.processIcon.style.left = (offset - 8) + "px";
-            this.setState({ currentTime: TimeUtil.formateTime(this.audio.currentTime * 1000) });
+            this.setState({currentTime: TimeUtil.formateTime(this.audio.currentTime * 1000)});
             this.forceUpdate();
         };
 
-        this.volumeIcon.ondragstart = (e) => {
+        this.processIcon.ondragstart = (e) => {
             const parentLeft = e.clientX - this.processIcon.offsetLeft;
             this.processIcon.ondrag = (e1) => {
-                let left = e1.clientX - parentLeft;
-                let width = 0;
-                if (left < 0)
-                {
-                    left = 0;
+                e1.dataTransfer.setDragImage(this.dragImage, 0, 0);
+                if (e1.x === 0 && e1.y === 0) {
+                    return;
                 }
-                else if (left > 492)
-                {
-                    left = 492;
-                    width =500;
-                }
-                else
-                {
-                    width = left + 8;
-                }
-                this.processIcon.style.left = left + "px";
-                this.playingBar.style.width = width + "px";
-            };
-
-            this.processIcon.ondragend = (e1) => {
-                let left = e1.clientX - parentLeft;
-                let width = 0;
-                if (left < 0)
-                {
-                    left = 0;
-                }
-                else if (left > 492)
-                {
-                    left = 492;
-                    width =500;
-                }
-                else
-                {
-                    width = left + 8;
-                }
-                this.processIcon.style.left = left + "px";
-                this.playingBar.style.width = width + "px";
-
-                const currentTime = (Math.round(this.audio.duration * width / 500));
-                this.audio.currentTime = currentTime;
+                const left = e1.clientX - parentLeft;
+                this._processControl(left, true);
             };
         };
 
         this.volumeIcon.ondragstart = (e) => {
             const parentLeft = e.clientX - this.volumeIcon.offsetLeft;
             this.volumeIcon.ondrag = (e1) => {
-                let left = e1.clientX - parentLeft;
-                let width = 0;
-                if (left < 0)
-                {
-                    left = 0;
-                }
-                else if (left > 92)
-                {
-                    left = 92;
-                    width =100;
-                }
-                else
-                {
-                    width = left + 8;
-                }
-                this.volumeIcon.style.left = left + "px";
-                this.volumeBar.style.width = width + "px";
-            };
 
-            this.volumeIcon.ondragend = (e1) => {
-                let left = e1.clientX - parentLeft;
-                let width = 0;
-                if (left < 0)
-                {
-                    left = 0;
+                e1.dataTransfer.setDragImage(this.dragImage, 0, 0);
+                if (e1.x === 0 && e1.y === 0) {
+                    return;
                 }
-                else if (left > 92)
-                {
-                    left = 92;
-                    width =100;
-                }
-                else
-                {
-                    width = left + 8;
-                }
-                this.volumeIcon.style.left = left + "px";
-                this.volumeBar.style.width = width + "px";
-
-                const volume = width / 100;
-                this.audio.volume = volume;
-
+                const left = e1.clientX - parentLeft;
+                this._volumeControl(left, true);
             };
         };
     }
@@ -197,7 +133,7 @@ export default class PlayerView extends Component
                     <a className="track-artist">{ this.state.artistName }</a>
                 </div>
                 <div className="foot">
-                    <div className="track-process">
+                    <div className="track-process" onClick={this._handleProcess.bind(this)}>
                         <div ref="playingBar" className="playingBar"></div>
                         <span ref="processIcon" className="point iconfont icon-bar" draggable="true"></span>
                     </div>
@@ -209,13 +145,13 @@ export default class PlayerView extends Component
                 <a className="share iconfont icon-share"></a>
             </div>
             <div className="track-setting">
-                    <a className="track-volume iconfont icon-soundplus"></a>
-                    <div className="volume-process">
+                    <a className={`track-volume iconfont ${this.state.muted ? 'icon-soundminus' : 'icon-soundplus'}` } onClick={this._toggleSound.bind(this)}></a>
+                    <div className="volume-process" onClick={this._handleVolume.bind(this)}>
                         <div ref="volumeBar" className="volumeBar"></div>
                         <span ref="volumeIcon" className="point iconfont icon-bar" draggable="true"></span>
                     </div>
             </div>
-            <audio ref="audio" className="music-player" src={ this.state.mp3Url } draggable="true" controls="controls">
+            <audio ref="audio" className="music-player" src={ this.state.mp3Url } draggable="true" controls="controls" muted={this.state.muted}>
             </audio>
         </div>);
     }
@@ -230,7 +166,7 @@ export default class PlayerView extends Component
         else
         {
             const track = this.state.trackList[index-1 > 0 ? index - 1 : 0 ];
-            this.setState({ onPlayTrack:  track });
+            this.setState({onPlayTrack:  track});
             this._initSelectedTrack(track);
         }
     }
@@ -253,42 +189,35 @@ export default class PlayerView extends Component
     _togglePlay()
     {
         if (!this.state.readyState) return ; //效果后续添加
-        if (this.state.playState === true)
-        {
+        if (this.state.playState === true) {
             this.playStateBtn.classList.remove("icon-pause");
             this.playStateBtn.classList.add("icon-play");
             this.audio.pause();
-            this.setState({ playState : false });
+            this.setState({playState : false});
         }
-        else
-        {
+        else {
             this.playStateBtn.classList.remove("icon-play");
             this.playStateBtn.classList.add("icon-pause");
             this.audio.play();
-            this.setState({ playState : true });
+            this.setState({playState : true});
         }
     }
 
-    _initPlayer()
-    {
-        this.setState({ playState: false });
+    _initPlayer() {
+        this.setState({playState: false});
         this.playStateBtn.classList.remove("icon-pause");
         this.playStateBtn.classList.add("icon-play");
         this.playingBar.style.width = "0px";
         this.processIcon.style.left = "0px";
     }
 
-    _initSelectedTrack(track)
-    {
-        if (track)
-        {
+    _initSelectedTrack(track) {
+        if (track) {
             let duration = 0;
-            if (track.lMusic)
-            {
+            if (track.lMusic) {
                 duration = track.lMusic.playTime;
             }
-            else
-            {
+            else {
                 duration = track.duration;
             }
             this.setState({
@@ -302,8 +231,7 @@ export default class PlayerView extends Component
                 mp3Url: track.mp3Url
             });
         }
-        else
-        {
+        else {
             this.setState({
                 onPlayTrack: null,
                 playState: false,
@@ -316,4 +244,73 @@ export default class PlayerView extends Component
             });
         }
     }
+    //歌曲进度控制，realSet为true时真实设置歌曲进度
+     _processControl(offsetLeft, realSet = false) {
+         let left = offsetLeft;
+         let width = 0;
+
+         if (left < 0) {
+             left = 0;
+         }
+         else if (left > 492) {
+             left = 492;
+             width = 500;
+         }
+         else {
+             width = left + 16;
+         }
+
+         this.processIcon.style.left = left + "px";
+         this.playingBar.style.width = width + "px";
+
+         if (realSet) {
+             const currentTime = (Math.round(this.audio.duration * width / 500));
+             this.audio.currentTime = currentTime;
+         }
+     }
+
+     //歌曲声音控制，realSet为true时真实设置为歌曲声音
+     _volumeControl(offsetLeft, realSet = false) {
+         let left = offsetLeft;
+         let width = 0;
+         console.log(left);
+         if (left < 0) {
+             left = 0;
+         }
+         else if (left > 92) {
+             left = 92;
+             width = 100;
+         }
+         else {
+             width = left + 8;
+         }
+         this.volumeIcon.style.left = left + "px";
+         this.volumeBar.style.width = width + "px";
+
+         if (realSet) {
+             const volume = width / 100;
+             this.audio.volume = volume;
+         }
+     }
+
+     //开关音乐声音
+     _toggleSound() {
+         this.setState({
+             muted: !this.state.muted
+         });
+     }
+
+     //进度条点击事件监听器
+     _handleProcess(e) {
+         let processLeft = $('.track-process').offset().left;
+         const left = e.clientX - processLeft - 8;
+         this._processControl(left, true);
+     }
+
+     //声音条点击事件监听器
+     _handleVolume(e) {
+         let volumeLeft = $('.volume-process').offset().left;
+         const left = e.clientX - volumeLeft - 8;
+         this._volumeControl(left, true);
+     }
 }
