@@ -36,4 +36,4 @@ npm start
 本项目存在Dockerfile,可以再daocluod等平台直接github库部署:tada:
 
 ## 作者寄语
-该app设计和代码还存在缺陷，欢迎各位的批评和指正，具体请到issue版块反馈，我会及时回复
+该app设计和代码还存在缺陷，欢迎各位的批评和指正，具体请到issue版块反馈，我会及时回复:smile:
