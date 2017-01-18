@@ -246,6 +246,9 @@ export default class PlayerView extends Component
     }
     //歌曲进度控制，realSet为true时真实设置歌曲进度
      _processControl(offsetLeft, realSet = false) {
+         if (!this.state.playState) {
+             return;
+         }
          let left = offsetLeft;
          let width = 0;
 
