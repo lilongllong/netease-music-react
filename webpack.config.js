@@ -9,7 +9,10 @@ module.exports = {
 
     entry: {
         vendor: [ "jquery" ],
-        nmr: ["./nmr/index.js", "./nmr/resource/index.less" ]
+        nmr: ["webpack-dev-server/client?http://localhost:8080",
+              "webpack/hot/only-dev-server",
+              "./nmr/index.js",
+              "./nmr/resource/index.less" ]
     },
 
     output: {
@@ -23,7 +26,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: "babel-loader"
+                loaders: ["react-hot", "babel-loader"]
             },
             {
                 test: /\.less$/,
@@ -37,6 +40,7 @@ module.exports = {
     },
 
     plugins: [
+        new webpack.HotModuleReplacementPlugin(),
         new webpack.ProvidePlugin({
             "$": "jquery",
             "jQuery": "jquery"

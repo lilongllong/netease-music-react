@@ -7,7 +7,7 @@ const server = new WebpackDevServer(webpack(config), {
     publicPath: config.output.publicPath,
     proxy: config.devServer.proxy,
     hot: true,
-    // historyApiFallback: true,
+    historyApiFallback: true,
 }).listen(8080, function (err) {
     if (err) {
         console.log(err);
