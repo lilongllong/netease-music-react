@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 
+import PlayerSongList from '../components/PlayerSongList';
 import PlayerView from "../components/PlayerView";
 import PlayListsView from "../components/PlayListsView";
 import SearchView from "../components/SearchView";
@@ -31,7 +32,8 @@ export default class Application extends Component {
         selectedPlaylistId: null,
         selectedTrack: null,
         trackList: [],
-        trackInfo: null
+        trackInfo: null,
+        songlistOpen: true,
     }
 
     componentWillUpdate() {
@@ -73,6 +75,11 @@ export default class Application extends Component {
                     </section>
                 </main>
                 <footer>
+                    <PlayerSongList className="nm-player-songlist"
+                        handleToggleChange={this.tempFunc}
+                        handleSelectionChange={this.tempFunc}
+                        open={this.state.songlistOpen}
+                        />
                     <PlayerView className="nm-player-view"
                                 selectedTrack={ this.state.selectedTrack }
                                 trackList={ this.state.trackList }
@@ -120,5 +127,9 @@ export default class Application extends Component {
             selectedTrack: data,
             selectedPlaylistId: ""
         });
+    }
+
+    tempFunc = () => {
+        return null;
     }
 }

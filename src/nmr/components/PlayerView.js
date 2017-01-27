@@ -140,10 +140,6 @@ export default class PlayerView extends Component {
                     <div className="track-time">{ this.state.currentTime + this.state.duration }</div>
                 </div>
             </div>
-            <div className="track-share">
-                <a className="favorite iconfont icon-favorite"></a>
-                <a className="share iconfont icon-share"></a>
-            </div>
             <div className="track-setting">
                 <a className={`track-volume iconfont ${this.state.muted ? 'icon-soundminus' : 'icon-soundplus'}` }
                    onClick={this._toggleSound.bind(this)}>
@@ -152,6 +148,10 @@ export default class PlayerView extends Component {
                     <div ref="volumeBar" className="volumeBar"></div>
                     <span ref="volumeIcon" className="point iconfont icon-bar" draggable="true"></span>
                 </div>
+            </div>
+            <div className="song-list">
+                <a className="songlist-icon iconfont icon-songlist"></a>
+                <a className="player-lock-icon iconfont icon-unlock"></a>
             </div>
             <audio ref="audio" className="music-player" src={ this.state.mp3Url } draggable="true" controls="controls"
                    muted={this.state.muted}>
