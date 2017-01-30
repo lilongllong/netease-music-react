@@ -1,13 +1,17 @@
-import React, { Component } from "react";
+import React, {Component, PropTypes} from 'react';
+
+import ServiceClient from '../service/ServiceClient';
 
 export default class TrackInfoView extends Component
 {
     static PropTypes = {
-        data: React.PropTypes.object.isRequired
+        data: PropTypes.object.isRequired,
+        songlistAddChange: PropTypes.func.isRequired,
     }
 
     static defaultProps = {
-        data: null
+        data: null,
+        songlistAddChange: null,
     }
 
     // type 0 null and 1 list, 2 single
@@ -24,8 +28,8 @@ export default class TrackInfoView extends Component
     componentWillReceiveProps(nextProps)
     {
         this._initTrack(nextProps.data);
-        this._initTrack(nextProps.data);
     }
+
     render()
     {
         if (this.state.data === null)
@@ -42,10 +46,33 @@ export default class TrackInfoView extends Component
                 </div>
                 <div className="track-artists">{ this.state.data.artist }</div>
                 <div className="operation-btn">
-                    <span className="icon icon-font icon-play-btn"></span>
+                    <button className="icon icon-font icon-play-btn" onClick={this.playPlaylist}>播放全部</button>
                 </div>
             </div>
         </div>);
+    }
+
+    playPlaylist = async () => {
+        if (this.state.data.type === "单曲") {
+            this.props.songlistAddChange(this.state.data);
+        }
+        else {
+            console.log(this.state.data.id);
+            const result = await ServiceClient.getInstance().getPlayListDetail(this.state.data.id);
+            if (result) {
+                result.tracks.map(item => {
+                    // console.log(item);
+                    this.props.songlistAddChange({
+                        id: item.id,
+                        imgsrc: item.album.picUrl,
+                        name: item.name,
+                        artist: item.album.artists.map(artist => artist.name).join(","),
+                        type: "单曲",
+                        mp3Url: item.mp3Url
+                    });
+                });
+            }
+        }
     }
 
     _initTrack(data)
