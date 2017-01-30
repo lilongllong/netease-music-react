@@ -37,7 +37,7 @@ export default class PlayerSongList extends Component {
     }
 
     render() {
-        return (<div className={classNames(this.props.className, 'panel')}>
+        return (<div className={classNames(this.props.className, 'panel', (this.state.open ? "nm-show" : "nm-hide"))}>
             <div className="panel-header">
                 <p>歌曲列表</p>
                 <div className="panel-title"></div>

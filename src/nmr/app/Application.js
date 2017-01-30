@@ -17,6 +17,7 @@ export default class Application extends Component {
         this.trackSelectionChange = this.trackSelectionChange.bind(this);
         this.trackInfoChange = this.trackInfoChange.bind(this);
         this.tracklistAddChange = this.tracklistAddChange.bind(this);
+        this.toggleSonglistOpen = this.toggleSonglistOpen.bind(this);
     }
 
     static defaultProps = {
@@ -33,17 +34,8 @@ export default class Application extends Component {
         selectedTrack: null,
         trackList: [],
         trackInfo: null,
-        songlistOpen: true,
+        songlistOpen: false,
     }
-
-    componentWillUpdate() {
-
-    }
-
-    componentWillReceiveProps(nextProps) {
-
-    }
-
 
     render() {
         return (
@@ -75,15 +67,17 @@ export default class Application extends Component {
                     </section>
                 </main>
                 <footer>
-                    <PlayerSongList className="nm-player-songlist"
-                        handleToggleChange={this.tempFunc}
-                        handleSelectionChange={this.tempFunc}
-                        open={this.state.songlistOpen}
-                        />
                     <PlayerView className="nm-player-view"
-                                selectedTrack={ this.state.selectedTrack }
-                                trackList={ this.state.trackList }
+                                selectedTrack={this.state.selectedTrack}
+                                songlist={this.state.songlist}
                                 handleSelectionChange={this.tracklistAddChange}
+                                handleSonglistOpenChange={this.toggleSonglistOpen}
+                    />
+                    <PlayerSongList className="nm-player-songlist"
+                    songlist={this.state.songlist}
+                    handleToggleChange={this.toggleSonglistOpen}
+                    handleSelectionChange={this.tempFunc}
+                    open={this.state.songlistOpen}
                     />
                 </footer>
             </div>
@@ -126,6 +120,12 @@ export default class Application extends Component {
             },
             selectedTrack: data,
             selectedPlaylistId: ""
+        });
+    }
+
+    toggleSonglistOpen(state = !this.state.songlistOpen) {
+        this.setState({
+            songlistOpen: state
         });
     }
 

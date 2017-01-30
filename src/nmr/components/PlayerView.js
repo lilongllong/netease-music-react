@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, PropTypes} from "react";
 
 import TimeUtil from "../util/TimeUtil";
 
@@ -13,11 +13,17 @@ export default class PlayerView extends Component {
     }
 
     static propTypes = {
-        selectedTrack: React.PropTypes.object
+        selectedTrack: PropTypes.object,
+        songlist: PropTypes.array,
+        handleSelectionChange: PropTypes.func.isRequired,
+        handleSonglistOpenChange: PropTypes.func.isRequired,
     }
 
     static defaultProps = {
-        selectedTrack: null
+        selectedTrack: null,
+        songlist: [],
+        handleSelectionChange: null,
+        handleSonglistOpenChange: null
     }
 
     state = {
@@ -29,21 +35,20 @@ export default class PlayerView extends Component {
         artistName: "",
         trackName: "未知",
         readyState: "false",
-        trackList: [],
+        songlist: [],
         muted: false    //是否静音
 
     }
 
     componentWillReceiveProps(nextProps) {
         this._initPlayer();
-        // this.playStateBtn.classList.add("clickDisabled");
         this._initSelectedTrack(nextProps.selectedTrack);
 
-        if (nextProps.trackList) {
-            this.setState({trackList: nextProps.trackList});
+        if (nextProps.songlist) {
+            this.setState({songlist: nextProps.songlist});
         }
         else {
-            this.setState({trackList: []});
+            this.setState({songlist: []});
         }
     }
 
@@ -51,8 +56,6 @@ export default class PlayerView extends Component {
         this.setState({
             onPlayTrack: this.props.selectedTrack
         });
-
-        this.dragImage = document.createElementNS("http://www.w3.org/1999/xhtml", "html:canvas");
         this.audio = this.refs["audio"];
         this.playingBar = this.refs["playingBar"];
         this.volumeBar = this.refs["volumeBar"];
@@ -91,7 +94,6 @@ export default class PlayerView extends Component {
         this.processIcon.ondragstart = (e) => {
             const parentLeft = e.clientX - this.processIcon.offsetLeft;
             this.processIcon.ondrag = (e1) => {
-                e1.dataTransfer.setDragImage(this.dragImage, 0, 0);
                 if (e1.x === 0 && e1.y === 0) {
                     return;
                 }
@@ -103,8 +105,6 @@ export default class PlayerView extends Component {
         this.volumeIcon.ondragstart = (e) => {
             const parentLeft = e.clientX - this.volumeIcon.offsetLeft;
             this.volumeIcon.ondrag = (e1) => {
-
-                e1.dataTransfer.setDragImage(this.dragImage, 0, 0);
                 if (e1.x === 0 && e1.y === 0) {
                     return;
                 }
@@ -150,7 +150,7 @@ export default class PlayerView extends Component {
                 </div>
             </div>
             <div className="song-list">
-                <a className="songlist-icon iconfont icon-songlist"></a>
+                <a className="songlist-icon iconfont icon-songlist" onClick={this.handleSonglistOpenChange}></a>
                 <a className="player-lock-icon iconfont icon-unlock"></a>
             </div>
             <audio ref="audio" className="music-player" src={ this.state.mp3Url } draggable="true" controls="controls"
@@ -159,25 +159,29 @@ export default class PlayerView extends Component {
         </div>);
     }
 
+    handleSonglistOpenChange = (e) => {
+        this.props.handleSonglistOpenChange();
+    }
+
     _prevTrack() {
-        const index = this.state.trackList.indexOf(this.state.onPlayTrack);
+        const index = this.state.songlist.indexOf(this.state.onPlayTrack);
         if (index === 0) {
             alert("the last music not exists!");
         }
         else {
-            const track = this.state.trackList[index - 1 > 0 ? index - 1 : 0];
+            const track = this.state.songlist[index - 1 > 0 ? index - 1 : 0];
             this.setState({onPlayTrack: track});
             this._initSelectedTrack(track);
         }
     }
 
     _nextTrack() {
-        const index = this.state.trackList.indexOf(this.state.onPlayTrack);
-        if (index === this.state.trackList.length) {
+        const index = this.state.songlist.indexOf(this.state.onPlayTrack);
+        if (index === this.state.songlist.length) {
             alert("Now it is the lastest music");
         }
         else {
-            const track = this.state.trackList[index + 1 > 0 ? index + 1 : 0];
+            const track = this.state.songlist[index + 1 > 0 ? index + 1 : 0];
             this.setState({onPlayTrack: track});
             this._initSelectedTrack(track);
         }
