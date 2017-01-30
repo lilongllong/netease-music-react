@@ -16,7 +16,7 @@ export default class Application extends Component {
         this.playSelectionChange = this.playSelectionChange.bind(this);
         this.trackSelectionChange = this.trackSelectionChange.bind(this);
         this.trackInfoChange = this.trackInfoChange.bind(this);
-        this.tracklistAddChange = this.tracklistAddChange.bind(this);
+        this.songlistAddChange = this.songlistAddChange.bind(this);
         this.toggleSonglistOpen = this.toggleSonglistOpen.bind(this);
     }
 
@@ -28,11 +28,20 @@ export default class Application extends Component {
         userId: React.PropTypes.string.isRequired
     }
 
+    /* trackInfo = {
+        imgsrc
+        name
+        artist
+        type
+        mp3Url
+        id
+    }
+    */
 
     state = {
         selectedPlaylistId: null,
         selectedTrack: null,
-        trackList: [],
+        songlist: [],
         trackInfo: null,
         songlistOpen: false,
     }
@@ -44,7 +53,7 @@ export default class Application extends Component {
                     <h1>网易云音乐</h1>
                     <SearchView className="nm-search-view"
                                 placeholder="请输入"
-                                handleSelectionChange={this.searchSelectionChange}
+                                songlistAddChange={this.songlistAddChange}
                     />
                 </header>
                 <main>
@@ -57,7 +66,7 @@ export default class Application extends Component {
                     <section className="content">
                         <TrackInfoView className="nm-track-info-view"
                                        data={ this.state.trackInfo }
-                                       handleSelectionChange={this.trackSelectionChange}
+                                       songlistAddChange={this.songlistAddChange}
                         />
                         <TrackTableView className="nm-track-table-view striped"
                                         playlistId={ this.state.selectedPlaylistId }
@@ -70,7 +79,7 @@ export default class Application extends Component {
                     <PlayerView className="nm-player-view"
                                 selectedTrack={this.state.selectedTrack}
                                 songlist={this.state.songlist}
-                                handleSelectionChange={this.tracklistAddChange}
+                                handleSelectionChange={this.songlistAddChange}
                                 handleSonglistOpenChange={this.toggleSonglistOpen}
                     />
                     <PlayerSongList className="nm-player-songlist"
@@ -93,13 +102,17 @@ export default class Application extends Component {
     trackSelectionChange(track) {
         if (this.track !== this.state.selectedTrack) {
             this.setState({selectedTrack: track});
-            this.state.trackList.push(track);
+            this.songlistAddChange(track);
         }
     }
 
-    tracklistAddChange(value) {
-        if (this.state.trackList.indexOf(value) < -1) {
-            this.state.push(value);
+    songlistAddChange(value) {
+        console.log(value);
+        const sameSong = this.state.songlist.find(item => item.id === value.id);
+        if (sameSong === undefined) {
+            this.setState({
+                songlist: this.state.songlist.concat(value)
+            });
         }
     }
 

@@ -110,8 +110,10 @@ export default class TrackTableView extends Component {
 
     // type false 代表 单曲，TRUE = list
     _offerTrackInfo(data, type) {
+        console.log(data);
         if (type) {
             const trackInfo = {
+                id: data.id,
                 imgsrc: data.coverImgUrl,
                 name: data.name,
                 artist: data.creator.nickname,
@@ -122,6 +124,7 @@ export default class TrackTableView extends Component {
         }
         else {
             const trackInfo = {
+                id: data.id,
                 imgsrc: data.album.picUrl,
                 name: data.name,
                 artist: data.album.artists.map(artist => artist.name).join(","),
