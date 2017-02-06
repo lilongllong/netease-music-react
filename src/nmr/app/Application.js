@@ -69,6 +69,7 @@ export default class Application extends Component {
                     <section className="content">
                         <TrackInfoView className="nm-track-info-view"
                                        data={ this.state.trackInfo }
+                                       handleSelectionChange={this.trackSelectionChange}
                                        songlistAddChange={this.songlistAddChange}
                         />
                         <TrackTableView className="nm-track-table-view striped"
