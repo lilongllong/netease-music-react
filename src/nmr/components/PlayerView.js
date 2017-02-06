@@ -1,3 +1,4 @@
+import classnames from 'classnames';
 import React, {Component, PropTypes} from "react";
 
 import TimeUtil from "../util/TimeUtil";
@@ -13,6 +14,7 @@ export default class PlayerView extends Component {
     }
 
     static propTypes = {
+        lock: PropTypes.bool.isRequired,
         selectedTrack: PropTypes.object,
         songlist: PropTypes.array,
         handleSelectionChange: PropTypes.func.isRequired,
@@ -20,6 +22,7 @@ export default class PlayerView extends Component {
     }
 
     static defaultProps = {
+        lock: null,
         selectedTrack: null,
         songlist: [],
         handleSelectionChange: null,
@@ -36,6 +39,7 @@ export default class PlayerView extends Component {
         trackName: "未知",
         readyState: "false",
         songlist: [],
+        lock: null,
         muted: false    //是否静音
 
     }
@@ -49,6 +53,13 @@ export default class PlayerView extends Component {
         }
         else {
             this.setState({songlist: []});
+        }
+
+        if (this.state.lock === null) {
+            this.setState({lock: nextProps.lock});
+        }
+        else if (this.state.lock !== nextProps.lock) {
+            this.setState({lock: nextProps.lock});
         }
     }
 
@@ -151,7 +162,7 @@ export default class PlayerView extends Component {
             </div>
             <div className="song-list">
                 <a className="songlist-icon iconfont icon-songlist" onClick={this.handleSonglistOpenChange}></a>
-                <a className="player-lock-icon iconfont icon-unlock"></a>
+                <a className={classnames("player-lock-icon", "iconfont", (this.state.lock ? "icon-lock" : "icon-unlock"))} onClick={this.handleLockChange}></a>
             </div>
             <audio ref="audio" className="music-player" src={ this.state.mp3Url } draggable="true" controls="controls"
                    muted={this.state.muted}>
@@ -162,6 +173,11 @@ export default class PlayerView extends Component {
     handleSonglistOpenChange = (e) => {
         this.props.handleSonglistOpenChange();
     }
+
+    handleLockChange = (e) => {
+        this.props.handleLockChange();
+    }
+
 
     _prevTrack() {
         const index = this.state.songlist.indexOf(this.state.onPlayTrack);

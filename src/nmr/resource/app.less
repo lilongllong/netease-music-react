@@ -92,14 +92,19 @@ html, body, #root
         height: @nm-app-footer-height;
         width: 100%;
         left: 0;
-        bottom: (0 - @nm-app-footer-height);
+        bottom: (0 - @nm-app-footer-height + 2);
         background: @nm-app-darker-bg;
         border-top: 1px solid @nm-separate-color;
         transition-delay: 0s;
         transition-duration: 0.5s;
         transition-property: bottom;
         transition-timing-function: ease-in-out;
+
         &:hover {
+            bottom: 0;
+        }
+
+        &.lock {
             bottom: 0;
         }
     }

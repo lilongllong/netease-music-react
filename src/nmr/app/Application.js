@@ -18,6 +18,7 @@ export default class Application extends Component {
         this.trackInfoChange = this.trackInfoChange.bind(this);
         this.songlistAddChange = this.songlistAddChange.bind(this);
         this.toggleSonglistOpen = this.toggleSonglistOpen.bind(this);
+        this.togglePlayerLock = this.togglePlayerLock.bind(this);
     }
 
     static defaultProps = {
@@ -42,8 +43,10 @@ export default class Application extends Component {
         selectedPlaylistId: null,
         selectedTrack: null,
         songlist: [],
+        songlsitHistory: [],
         trackInfo: null,
         songlistOpen: false,
+        playerLockState: false,
     }
 
     render() {
@@ -75,12 +78,14 @@ export default class Application extends Component {
                         />
                     </section>
                 </main>
-                <footer>
+                <footer className={this.state.playerLockState ? "lock" : "unlock"}>
                     <PlayerView className="nm-player-view"
+                                lock={this.state.playerLockState}
                                 selectedTrack={this.state.selectedTrack}
                                 songlist={this.state.songlist}
                                 handleSelectionChange={this.songlistAddChange}
                                 handleSonglistOpenChange={this.toggleSonglistOpen}
+                                handleLockChange={this.togglePlayerLock}
                     />
                     <PlayerSongList className="nm-player-songlist"
                     songlist={this.state.songlist}
@@ -103,11 +108,15 @@ export default class Application extends Component {
         if (this.track !== this.state.selectedTrack) {
             this.setState({selectedTrack: track});
             this.songlistAddChange(track);
+
         }
     }
 
     songlistAddChange(value) {
-        console.log(value);
+        if (value === null || value === undefined) {
+            console.log("songlistAddChange params's value cann't be null or undefined!");
+            return;
+        }
         const sameSong = this.state.songlist.find(item => item.id === value.id);
         if (sameSong === undefined) {
             this.setState({
@@ -115,6 +124,16 @@ export default class Application extends Component {
             });
         }
     }
+
+    // songlistHistoryChange(value) {
+    //     if (value === null || value === undefined) {
+    //         console.log("songlistAddChange params's value cann't be null or undefined!");
+    //         return;
+    //     }
+    //     this.setState({
+    //         songlistHistory: this.state.songlistHistory.concat(value);
+    //     });
+    // }
 
     trackInfoChange(data) {
         this.setState({
@@ -139,6 +158,11 @@ export default class Application extends Component {
     toggleSonglistOpen(state = !this.state.songlistOpen) {
         this.setState({
             songlistOpen: state
+        });
+    }
+    togglePlayerLock(state = !this.state.playerLockState) {
+        this.setState({
+            playerLockState: state
         });
     }
 
