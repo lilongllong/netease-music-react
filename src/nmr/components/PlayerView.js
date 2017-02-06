@@ -1,6 +1,7 @@
 import classnames from 'classnames';
 import React, {Component, PropTypes} from "react";
 
+import ServiceClient from '../service/ServiceClient';
 import TimeUtil from "../util/TimeUtil";
 
 export default class PlayerView extends Component {
@@ -46,7 +47,9 @@ export default class PlayerView extends Component {
 
     componentWillReceiveProps(nextProps) {
         this._initPlayer();
-        this._initSelectedTrack(nextProps.selectedTrack);
+        if (nextProps.selectedTrack) {
+            this._initSelectedTrack(nextProps.selectedTrack);
+        }
 
         if (nextProps.songlist) {
             this.setState({songlist: nextProps.songlist});
@@ -180,7 +183,8 @@ export default class PlayerView extends Component {
 
 
     _prevTrack() {
-        const index = this.state.songlist.indexOf(this.state.onPlayTrack);
+        const track = this.state.onPlayTrack;
+        const index = this.state.songlist.findIndex(item => track.id === item.id);
         if (index === 0) {
             alert("the last music not exists!");
         }
@@ -192,7 +196,8 @@ export default class PlayerView extends Component {
     }
 
     _nextTrack() {
-        const index = this.state.songlist.indexOf(this.state.onPlayTrack);
+        const track = this.state.onPlayTrack;
+        const index = this.state.songlist.findIndex(item => track.id === item.id);
         if (index === this.state.songlist.length) {
             alert("Now it is the lastest music");
         }
@@ -224,22 +229,25 @@ export default class PlayerView extends Component {
 
     _initSelectedTrack(track) {
         if (track) {
-            let duration = 0;
-            if (track.lMusic) {
-                duration = track.lMusic.playTime;
-            }
-            else {
-                duration = track.duration;
-            }
-            this.setState({
-                onPlayTrack: track,
-                playState: false,
-                duration: "/" + TimeUtil.formateTime(duration),
-                currentTime: "00:00",
-                imgSrc: track.album.blurPicUrl,
-                artistName: track.artists.map(artist => artist.name).join(","),
-                trackName: track.name,
-                mp3Url: track.mp3Url
+            ServiceClient.getInstance().fetchSongDetails(track.id).then(result => {
+                const track = result[0];
+                let duration = 0;
+                if (track.lMusic) {
+                    duration = track.lMusic.playTime;
+                }
+                else {
+                    duration = track.duration;
+                }
+                this.setState({
+                    onPlayTrack: track,
+                    playState: false,
+                    duration: "/" + TimeUtil.formateTime(duration),
+                    currentTime: "00:00",
+                    imgSrc: track.album.blurPicUrl,
+                    artistName: track.artists.map(artist => artist.name).join(","),
+                    trackName: track.name,
+                    mp3Url: track.mp3Url
+                });
             });
         }
         else {

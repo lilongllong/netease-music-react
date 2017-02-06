@@ -6,11 +6,13 @@ export default class TrackInfoView extends Component
 {
     static PropTypes = {
         data: PropTypes.object.isRequired,
+        handleSelectionChange: PropTypes.func.isRequired,
         songlistAddChange: PropTypes.func.isRequired,
     }
 
     static defaultProps = {
         data: null,
+        handleSelectionChange: null,
         songlistAddChange: null,
     }
 
@@ -57,19 +59,23 @@ export default class TrackInfoView extends Component
             this.props.songlistAddChange(this.state.data);
         }
         else {
-            console.log(this.state.data.id);
             const result = await ServiceClient.getInstance().getPlayListDetail(this.state.data.id);
             if (result) {
-                result.tracks.map(item => {
+                result.tracks.map((item, index) => {
                     // console.log(item);
-                    this.props.songlistAddChange({
-                        id: item.id,
-                        imgsrc: item.album.picUrl,
-                        name: item.name,
-                        artist: item.album.artists.map(artist => artist.name).join(","),
-                        type: "单曲",
-                        mp3Url: item.mp3Url
-                    });
+                    if (index === 0) {
+                        this.props.handleSelectionChange(item);
+                    }
+                    else {
+                        this.props.songlistAddChange({
+                            id: item.id,
+                            imgsrc: item.album.picUrl,
+                            name: item.name,
+                            artist: item.album.artists.map(artist => artist.name).join(","),
+                            type: "单曲",
+                            mp3Url: item.mp3Url
+                        });
+                    }
                 });
             }
         }
