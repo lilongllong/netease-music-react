@@ -4,6 +4,9 @@
 ## first step
 使用react重构代码
 
+## 缺陷
+state 冗余，需要整理和削减
+
 ## 环境
 - 安装nodejs
 - 安装git
