@@ -5,7 +5,7 @@
 使用react重构代码
 
 ## 环境
-- 安装node
+- 安装nodejs
 - 安装git
 - 安装npm
 
