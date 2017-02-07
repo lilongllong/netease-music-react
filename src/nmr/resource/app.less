@@ -43,7 +43,7 @@ html, body, #root
     }
 
     > header {
-        background: @nm-app-color;
+        background: @nm-app-header-backgroud;
         color: white;
         width: 100%;
         flex: 0 0 @nm-app-header-height;
@@ -52,9 +52,14 @@ html, body, #root
         align-items: center;
         justify-content: space-between;
 
-        > h1 {
+        > .netease-music-logo {
             display: block;
-            margin-left: 20px;
+            float: left;
+            margin-left: 35px;
+            width: 165px;
+            height: 40px;
+            background-position: 0 0px;
+            background: url(https://github.com/lilongllong/netease-music-react/blob/development/images/logo.png?raw=true) no-repeat;
         }
 
         > .nm-search-view
@@ -70,6 +75,7 @@ html, body, #root
 
         display: flex;
         flex-direction: row;
+        justify-content: center;
         > aside {
             flex: 0 1 @nm-app-sidebar-width;
             padding: 0;
@@ -96,7 +102,7 @@ html, body, #root
         background: @nm-app-darker-bg;
         border-top: 1px solid @nm-separate-color;
         transition-delay: 0s;
-        transition-duration: 0.5s;
+        transition-duration: 0.3s;
         transition-property: bottom;
         transition-timing-function: ease-in-out;
 

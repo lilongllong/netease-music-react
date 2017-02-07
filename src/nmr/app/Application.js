@@ -32,16 +32,6 @@ export default class Application extends Component {
         userId: ""
     }
 
-    /* trackInfo = {
-        imgsrc
-        name
-        artist
-        type
-        mp3Url
-        id
-    }
-    */
-
     state = {
         selectedPlaylistId: null,
         selectedTrack: null,
@@ -55,7 +45,7 @@ export default class Application extends Component {
         return (
             <div className="nm-app">
                 <header>
-                    <h1>网易云音乐</h1>
+                    <div className="netease-music-logo"></div>
                     <SearchView className="nm-search-view"
                                 placeholder="请输入"
                                 handleSearchSelectionChange={this.searchSelectionChange}
