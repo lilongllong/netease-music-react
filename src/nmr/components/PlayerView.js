@@ -46,7 +46,10 @@ export default class PlayerView extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this._initPlayer();
+        if (nextProps && nextProps.selectedTrack.id !== this.state.onPlayTrack.id) {
+            this._initPlayer();
+        }
+
         if (nextProps.selectedTrack) {
             this._initSelectedTrack(nextProps.selectedTrack);
         }
@@ -174,6 +177,8 @@ export default class PlayerView extends Component {
     }
 
     handleSonglistOpenChange = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         this.props.handleSonglistOpenChange();
     }
 
@@ -232,6 +237,7 @@ export default class PlayerView extends Component {
     }
 
     _initPlayer() {
+        console.log('init player');
         this.setState({playState: false});
         this.playingBar.style.width = "0px";
         this.processIcon.style.left = "0px";
@@ -250,7 +256,7 @@ export default class PlayerView extends Component {
                 }
                 this.setState({
                     onPlayTrack: track,
-                    playState: false,
+                    playState: true,
                     duration: "/" + TimeUtil.formateTime(duration),
                     currentTime: "00:00",
                     imgSrc: track.album.blurPicUrl,
@@ -306,7 +312,6 @@ export default class PlayerView extends Component {
     _volumeControl(offsetLeft, realSet = false) {
         let left = offsetLeft;
         let width = 0;
-        console.log(left);
         if (left < 0) {
             left = 0;
         }
@@ -335,8 +340,9 @@ export default class PlayerView extends Component {
 
     //进度条点击事件监听器
     _handleProcess(e) {
+        console.log("process click");
         let processLeft = $('.track-process').offset().left;
-        const left = e.clientX - processLeft - 8;
+        const left = e.clientX - processLeft - 16;
         this._processControl(left, true);
     }
 
