@@ -5,7 +5,8 @@
 使用react重构代码
 
 ## 缺陷
-state 冗余，需要整理和削减
+1, state冗余，需要整理和削减
+2, trackInfo 和 player 两者的联动设计不合理，需要修正
 
 ## 环境
 - 安装nodejs
