@@ -68,7 +68,7 @@ export default class TrackInfoView extends Component
                         this.props.handleSelectionChange(item);
                     }
                     else {
-                        const trackInfo = new Model({data: item, type: '单曲'});
+                        const trackInfo = new TrackInfoModel({data: item, type: '单曲'});
                         this.props.songlistAddChange(trackInfo);
                     }
                 });

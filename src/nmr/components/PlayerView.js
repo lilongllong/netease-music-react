@@ -184,27 +184,37 @@ export default class PlayerView extends Component {
 
     _prevTrack() {
         const track = this.state.onPlayTrack;
-        const index = this.state.songlist.findIndex(item => track.id === item.id);
-        if (index === 0) {
-            alert("the last music not exists!");
-        }
-        else {
-            const track = this.state.songlist[index - 1 > 0 ? index - 1 : 0];
-            this.setState({onPlayTrack: track});
-            this._initSelectedTrack(track);
+        if (track) {
+            const index = this.state.songlist.findIndex(item => track.id === item.id);
+            if (index === 0) {
+                alert('已到达歌单首部');
+            }
+            else if (index > 0) {
+                const track = this.state.songlist[index - 1 > 0 ? index - 1 : 0];
+                this.setState({onPlayTrack: track});
+                this._initSelectedTrack(track);
+            }
+            else {
+                alert('歌单已清空');
+            }
         }
     }
 
     _nextTrack() {
         const track = this.state.onPlayTrack;
-        const index = this.state.songlist.findIndex(item => track.id === item.id);
-        if (index === this.state.songlist.length) {
-            alert("Now it is the lastest music");
-        }
-        else {
-            const track = this.state.songlist[index + 1 > 0 ? index + 1 : 0];
-            this.setState({onPlayTrack: track});
-            this._initSelectedTrack(track);
+        if (track) {
+            const index = this.state.songlist.findIndex(item => track.id === item.id);
+            if (index === this.state.songlist.length) {
+                alert("Now it is the lastest music");
+            }
+            else if (index >= 0 ) {
+                const track = this.state.songlist[index + 1 > 0 ? index + 1 : 0];
+                this.setState({onPlayTrack: track});
+                this._initSelectedTrack(track);
+            }
+            else {
+                alert('歌单已清空');
+            }
         }
     }
 
