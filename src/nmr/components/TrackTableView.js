@@ -1,15 +1,22 @@
-import React, {Component} from "react";
+import React, {Component, PropTypes} from 'react';
 
-import ServiceClient from "../service/ServiceClient";
-import TimeUtil from "../util/TimeUtil";
+import ServiceClient from '../service/ServiceClient';
+import TimeUtil from '../util/TimeUtil';
+import TrackInfoModel from '../model/TrackInfoModel';
 
 export default class TrackTableView extends Component {
-    static defaultProps = {
-        playlistId: null
+    static propTypes = {
+        playlistId: PropTypes.number,
+        handleSelectionChange: PropTypes.func.isRequired,
+        songlistAddChange: PropTypes.func.isRequired,
+        handleInfoChange: PropTypes.func.isRequired,
     }
 
-    static propTypes = {
-        playlistId: React.PropTypes.number
+    static defaultProps = {
+        playlistId: null,
+        handleSelectionChange: null,
+        songlistAddChange: null,
+        handleInfoChange: null,
     }
 
     state = {
@@ -24,7 +31,7 @@ export default class TrackTableView extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.playlistId !== nextProps.playlistId) {
-            if (nextProps.playlistId && nextProps.playlistId !== "") {
+            if (nextProps.playlistId && nextProps.playlistId !== '') {
                 ServiceClient.getInstance().getPlayListDetail(nextProps.playlistId).then((result) => {
                     if (result && result.tracks && result.tracks !== this.state.data) {
                         this.setState({data: result.tracks});
@@ -78,7 +85,7 @@ export default class TrackTableView extends Component {
                 onClick={ () => {
                     this._selectedItem(data.id);
                     this.props.handleSelectionChange(track);
-                    this._offerTrackInfo(track, false);
+                    this.props.songlistAddChange(new TrackInfoModel({track, type: '单曲'}));
                 }}
             >
                 {$tds}
@@ -111,23 +118,22 @@ export default class TrackTableView extends Component {
     // type false 代表 单曲，TRUE = list
     _offerTrackInfo(data, type) {
         if (type) {
-            const trackInfo = {
+            const trackInfo = new TrackInfoModel();
+            console.log(data, "list");
+            trackInfo.value = {
+                data: null,
+                id: data.id,
                 imgsrc: data.coverImgUrl,
                 name: data.name,
                 artist: data.creator.nickname,
                 type: "歌单",
-                mp3Url: ""
+                mp3Url: "",
+                time: "00:00"
             };
             this.props.handleInfoChange(trackInfo);
         }
         else {
-            const trackInfo = {
-                imgsrc: data.album.picUrl,
-                name: data.name,
-                artist: data.album.artists.map(artist => artist.name).join(","),
-                type: "单曲",
-                mp3Url: data.mp3Url
-            };
+            const trackInfo = new TrackInfoModel({data, type: '单曲'});
             this.props.handleInfoChange(trackInfo);
         }
     }

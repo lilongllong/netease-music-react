@@ -1,0 +1,157 @@
+.nm-player-songlist-panel {
+    position: absolute;
+    bottom: @nm-app-footer-height;
+    left: 50%;
+    margin-left: -(@nm-player-songlist-width / 2);
+    width: @nm-player-songlist-width;
+    height: @nm-player-songlist-height;
+
+    display: flex;
+    flex-direction: column;
+
+    > .panel-header {
+        flex: 0 0 @nm-player-songlist-header-height;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        background-color: @nm-player-songlist-background-color;
+        color: #e2e2e2;
+
+        > .panel-title {
+            font-size: 14px;
+            margin-left: 25px;
+        }
+
+        > .panel-extra {
+            flex: 0 0 500px;
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+
+            > .clearBtn {
+                flex: 0 0 72px;
+                font-size: 12px;
+                color: #ccc;
+
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+
+                &:hover {
+                    cursor: pointer;
+                    color: #fff;
+                }
+            }
+
+            > .song-lyric-name {
+                flex: 0 0 346px;
+                font-size: 14px;
+                text-align: center;
+                color: white;
+            }
+
+            > .songlist-close {
+                flex: 0 0 22px;
+                font-size: 12px;
+                margin-right: 8px;
+
+                &:hover {
+                    cursor: pointer;
+                    color: #fff;
+                }
+            }
+        }
+    }
+
+    > .panel-body {
+        flex: 1 1 0px;
+        background-color: #252426;
+
+        display: flex;
+        flex-direction: row;
+
+        > .songlist-table {
+            flex: 0 0 555px;
+            height: 100%;
+            overflow-y: scroll;
+            overflow-x: hidden;
+
+            &::-webkit-scrollbar {
+                 background-color: rgb(0,0,0);
+                 width: 6px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: rgb(134, 134, 134);
+                width: 6px;
+                border-radius: 3px;
+                height: 40px;
+            }
+
+            > table {
+                width: 100%;
+                height: 100%;
+
+                > tbody > tr {
+                    height: 28px;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 5px;
+                    color: #ccc;
+                    font-family: Arial, Helvetica, sans-serif;
+                    font-size: 12px;
+                    font-weight: 260px;
+
+                    &.active,&:hover {
+                        color: #fff;
+                        background-color: @nm-player-songlist-background-color;
+                    }
+
+                    > .playing-icon {
+                        flex: 0 0 25px;
+                        margin-left: 10px;
+
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        > span.iconfont {
+                            font-size: 12px;
+                            color: #bc0b0b;
+                        }
+                    }
+
+                    > .song-name {
+                        flex: 1 0 250px;
+                        overflow-x: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+
+                    > .song-artist {
+                        flex: 1 0 100px;
+                        width: 100px;
+                        margin-left: 70px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+
+                    > .song-duration {
+                        flex: 1 0 50px;
+                    }
+                }
+            }
+        }
+
+        > .song-lyric {
+            flex: 1 1 0px;
+        }
+    }
+}

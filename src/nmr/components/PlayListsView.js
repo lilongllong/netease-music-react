@@ -32,16 +32,11 @@ export default class PlayListsView extends React.Component
             className += " selected";
         }
 
-        return (<li ref={ playlist.id } key={ playlist.id } className={ className } onClick={ () => this._onClick(playlist.id) } > <span className="icon iconfont icon-music"></span> { playlist.name } </li>);
+        return (<li ref={ playlist.id } key={ playlist.id } className={ className } onClick={ () => this._onClick(playlist.id) } > <span className="icon iconfont icon-music-2"></span> { playlist.name } </li>);
         });
         return ( <ul className={ this.props.className } >
             {$lis}
         </ul>);
-    }
-
-    componentDidUpdate()
-    {
-
     }
 
     async _initData()

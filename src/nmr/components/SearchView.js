@@ -1,16 +1,19 @@
-import React, { Component } from "react";
+import classnames from 'classnames';
+import React, { Component, PropTypes } from 'react';
 
-import ServiceClient from "../service/ServiceClient";
-import SuggestionListView from "./SuggestionListView";
+import ServiceClient from '../service/ServiceClient';
+import SuggestionListView from './SuggestionListView';
 
 export default class SearchView extends Component
 {
-    static PropTypes = {
-        placeholder: React.PropTypes.string
+    static propTypes = {
+        placeholder: PropTypes.string,
+        handleSearchSelectionChange: PropTypes.func.isRequired,
     }
 
     static defaultProps = {
-        placeholder: "please input"
+        placeholder: "please input",
+        handleSearchSelectionChange: null,
     }
 
     state = {
@@ -62,11 +65,6 @@ export default class SearchView extends Component
         }, 300);
     }
 
-    componentWillReceiveProps(nextProps)
-    {
-
-    }
-
     componentDidMount()
     {
         this.refs["song-input"].onblur = () => { this.setState({show: false}); };
@@ -79,12 +77,11 @@ export default class SearchView extends Component
         return (<div className={ this.props.className ? this.props.className : "" }>
             <span className="iconfont icon-search"></span>
             <input  ref="song-input" type="search" placeholder={this.props.placeholder} onChange={ this.handleInputChange.bind(this) }/>
-            <SuggestionListView className={ "nm-suggestion-list-view " + (this.state.show ? "nm-show" : "nm-hide")} data={ this.state.data } handleSelectionChange={ this.props.handleSelectionChange } />
+            <SuggestionListView
+                className={classnames("nm-suggestion-list-view", (this.state.show ? "nm-show" : "nm-hide"))}
+                data={this.state.data}
+                handleSearchSelectionChange={this.props.handleSearchSelectionChange}
+                />
         </div>);
-    }
-
-    handleSelectionChange(data)
-    {
-        this.props.handleSelectionChange(data);
     }
 }

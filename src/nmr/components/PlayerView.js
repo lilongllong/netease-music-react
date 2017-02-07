@@ -1,5 +1,7 @@
-import React, {Component} from "react";
+import classnames from 'classnames';
+import React, {Component, PropTypes} from "react";
 
+import ServiceClient from '../service/ServiceClient';
 import TimeUtil from "../util/TimeUtil";
 
 export default class PlayerView extends Component {
@@ -13,11 +15,19 @@ export default class PlayerView extends Component {
     }
 
     static propTypes = {
-        selectedTrack: React.PropTypes.object
+        lock: PropTypes.bool.isRequired,
+        selectedTrack: PropTypes.object,
+        songlist: PropTypes.array,
+        handleSelectionChange: PropTypes.func.isRequired,
+        handleSonglistOpenChange: PropTypes.func.isRequired,
     }
 
     static defaultProps = {
-        selectedTrack: null
+        lock: null,
+        selectedTrack: null,
+        songlist: [],
+        handleSelectionChange: null,
+        handleSonglistOpenChange: null
     }
 
     state = {
@@ -29,21 +39,31 @@ export default class PlayerView extends Component {
         artistName: "",
         trackName: "未知",
         readyState: "false",
-        trackList: [],
+        songlist: [],
+        lock: null,
         muted: false    //是否静音
 
     }
 
     componentWillReceiveProps(nextProps) {
-        this._initPlayer();
-        // this.playStateBtn.classList.add("clickDisabled");
-        this._initSelectedTrack(nextProps.selectedTrack);
 
-        if (nextProps.trackList) {
-            this.setState({trackList: nextProps.trackList});
+        if (nextProps.selectedTrack !== this.onPlayTrack) {
+            this._initPlayer();
+            this._initSelectedTrack(nextProps.selectedTrack);
+        }
+
+        if (nextProps.songlist) {
+            this.setState({songlist: nextProps.songlist});
         }
         else {
-            this.setState({trackList: []});
+            this.setState({songlist: []});
+        }
+
+        if (this.state.lock === null) {
+            this.setState({lock: nextProps.lock});
+        }
+        else if (this.state.lock !== nextProps.lock) {
+            this.setState({lock: nextProps.lock});
         }
     }
 
@@ -51,8 +71,6 @@ export default class PlayerView extends Component {
         this.setState({
             onPlayTrack: this.props.selectedTrack
         });
-
-        this.dragImage = document.createElementNS("http://www.w3.org/1999/xhtml", "html:canvas");
         this.audio = this.refs["audio"];
         this.playingBar = this.refs["playingBar"];
         this.volumeBar = this.refs["volumeBar"];
@@ -91,7 +109,6 @@ export default class PlayerView extends Component {
         this.processIcon.ondragstart = (e) => {
             const parentLeft = e.clientX - this.processIcon.offsetLeft;
             this.processIcon.ondrag = (e1) => {
-                e1.dataTransfer.setDragImage(this.dragImage, 0, 0);
                 if (e1.x === 0 && e1.y === 0) {
                     return;
                 }
@@ -103,8 +120,6 @@ export default class PlayerView extends Component {
         this.volumeIcon.ondragstart = (e) => {
             const parentLeft = e.clientX - this.volumeIcon.offsetLeft;
             this.volumeIcon.ondrag = (e1) => {
-
-                e1.dataTransfer.setDragImage(this.dragImage, 0, 0);
                 if (e1.x === 0 && e1.y === 0) {
                     return;
                 }
@@ -140,10 +155,6 @@ export default class PlayerView extends Component {
                     <div className="track-time">{ this.state.currentTime + this.state.duration }</div>
                 </div>
             </div>
-            <div className="track-share">
-                <a className="favorite iconfont icon-favorite"></a>
-                <a className="share iconfont icon-share"></a>
-            </div>
             <div className="track-setting">
                 <a className={`track-volume iconfont ${this.state.muted ? 'icon-soundminus' : 'icon-soundplus'}` }
                    onClick={this._toggleSound.bind(this)}>
@@ -153,33 +164,60 @@ export default class PlayerView extends Component {
                     <span ref="volumeIcon" className="point iconfont icon-bar" draggable="true"></span>
                 </div>
             </div>
+            <div className="song-list">
+                <a className="songlist-icon iconfont icon-songlist" onClick={this.handleSonglistOpenChange}></a>
+                <a className={classnames("player-lock-icon", "iconfont", (this.state.lock ? "icon-lock" : "icon-unlock"))} onClick={this.handleLockChange}></a>
+            </div>
             <audio ref="audio" className="music-player" src={ this.state.mp3Url } draggable="true" controls="controls"
                    muted={this.state.muted}>
             </audio>
         </div>);
     }
 
+    handleSonglistOpenChange = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.props.handleSonglistOpenChange();
+    }
+
+    handleLockChange = (e) => {
+        this.props.handleLockChange();
+    }
+
+
     _prevTrack() {
-        const index = this.state.trackList.indexOf(this.state.onPlayTrack);
-        if (index === 0) {
-            alert("the last music not exists!");
-        }
-        else {
-            const track = this.state.trackList[index - 1 > 0 ? index - 1 : 0];
-            this.setState({onPlayTrack: track});
-            this._initSelectedTrack(track);
+        const track = this.state.onPlayTrack;
+        if (track) {
+            const index = this.state.songlist.findIndex(item => track.id === item.id);
+            if (index === 0) {
+                alert('已到达歌单首部');
+            }
+            else if (index > 0) {
+                const track = this.state.songlist[index - 1 > 0 ? index - 1 : 0];
+                // this.setState({onPlayTrack: track.data});
+                this.props.handleSelectionChange(track.data);
+            }
+            else {
+                alert('歌单已清空');
+            }
         }
     }
 
     _nextTrack() {
-        const index = this.state.trackList.indexOf(this.state.onPlayTrack);
-        if (index === this.state.trackList.length) {
-            alert("Now it is the lastest music");
-        }
-        else {
-            const track = this.state.trackList[index + 1 > 0 ? index + 1 : 0];
-            this.setState({onPlayTrack: track});
-            this._initSelectedTrack(track);
+        const track = this.state.onPlayTrack;
+        if (track) {
+            const index = this.state.songlist.findIndex(item => track.id === item.id);
+            if (index === this.state.songlist.length) {
+                alert("Now it is the lastest music");
+            }
+            else if (index >= 0 ) {
+                const track = this.state.songlist[index + 1 > 0 ? index + 1 : 0];
+                // this.setState({onPlayTrack: track.data});
+                this.props.handleSelectionChange(track.data);
+            }
+            else {
+                alert('歌单已清空');
+            }
         }
     }
 
@@ -199,7 +237,7 @@ export default class PlayerView extends Component {
     _initPlayer() {
         this.setState({playState: false});
         this.playingBar.style.width = "0px";
-        this.processIcon.style.left = "0px";
+        this.processIcon.style.left = "-8px";
     }
 
     _initSelectedTrack(track) {
@@ -213,7 +251,7 @@ export default class PlayerView extends Component {
             }
             this.setState({
                 onPlayTrack: track,
-                playState: false,
+                playState: true,
                 duration: "/" + TimeUtil.formateTime(duration),
                 currentTime: "00:00",
                 imgSrc: track.album.blurPicUrl,
@@ -268,7 +306,6 @@ export default class PlayerView extends Component {
     _volumeControl(offsetLeft, realSet = false) {
         let left = offsetLeft;
         let width = 0;
-        console.log(left);
         if (left < 0) {
             left = 0;
         }
@@ -298,7 +335,7 @@ export default class PlayerView extends Component {
     //进度条点击事件监听器
     _handleProcess(e) {
         let processLeft = $('.track-process').offset().left;
-        const left = e.clientX - processLeft - 8;
+        const left = e.clientX - processLeft - 16;
         this._processControl(left, true);
     }
 

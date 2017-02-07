@@ -1,56 +1,54 @@
-import React, {Component} from "react";
+import React, {Component} from 'react';
 
-import PlayerView from "../components/PlayerView";
-import PlayListsView from "../components/PlayListsView";
-import SearchView from "../components/SearchView";
-import ServiceClient from "../service/ServiceClient";
-import TrackInfoView from "../components/TrackInfoView";
-import TrackTableView from "../components/TrackTableView";
+import PlayerSongListPanel from '../components/PlayerSongListPanel';
+import PlayerView from '../components/PlayerView';
+import PlayListsView from '../components/PlayListsView';
+import SearchView from '../components/SearchView';
+import ServiceClient from '../service/ServiceClient';
+import TrackInfoView from '../components/TrackInfoView';
+import TrackTableView from '../components/TrackTableView';
+
+import TrackInfoModel from '../model/TrackInfoModel';
 
 export default class Application extends Component {
     constructor(props) {
         super(props);
 
-        this.searchSelectionChange = this.searchSelectionChange.bind(this);
         this.playSelectionChange = this.playSelectionChange.bind(this);
+        this.searchSelectionChange = this.searchSelectionChange.bind(this);
+        this.songlistAddChange = this.songlistAddChange.bind(this);
+        this.songlistSelectionChange = this.songlistSelectionChange.bind(this);
+        this.togglePlayerLock = this.togglePlayerLock.bind(this);
+        this.toggleSonglistOpen = this.toggleSonglistOpen.bind(this);
         this.trackSelectionChange = this.trackSelectionChange.bind(this);
         this.trackInfoChange = this.trackInfoChange.bind(this);
-        this.tracklistAddChange = this.tracklistAddChange.bind(this);
-    }
-
-    static defaultProps = {
-        userId: ""
     }
 
     static propTypes = {
         userId: React.PropTypes.string.isRequired
     }
 
+    static defaultProps = {
+        userId: ""
+    }
 
     state = {
         selectedPlaylistId: null,
         selectedTrack: null,
-        trackList: [],
-        trackInfo: null
+        songlist: [],
+        trackInfo: null,
+        songlistOpen: false,
+        playerLockState: false,
     }
-
-    componentWillUpdate() {
-
-    }
-
-    componentWillReceiveProps(nextProps) {
-
-    }
-
 
     render() {
         return (
             <div className="nm-app">
                 <header>
-                    <h1>网易云音乐</h1>
+                    <div className="netease-music-logo"></div>
                     <SearchView className="nm-search-view"
                                 placeholder="请输入"
-                                handleSelectionChange={this.searchSelectionChange}
+                                handleSearchSelectionChange={this.searchSelectionChange}
                     />
                 </header>
                 <main>
@@ -64,19 +62,31 @@ export default class Application extends Component {
                         <TrackInfoView className="nm-track-info-view"
                                        data={ this.state.trackInfo }
                                        handleSelectionChange={this.trackSelectionChange}
+                                       songlistAddChange={this.songlistAddChange}
                         />
                         <TrackTableView className="nm-track-table-view striped"
                                         playlistId={ this.state.selectedPlaylistId }
                                         handleSelectionChange={this.trackSelectionChange}
+                                        songlistAddChange={this.songlistAddChange}
                                         handleInfoChange={this.trackInfoChange}
                         />
                     </section>
                 </main>
-                <footer>
+                <footer className={this.state.playerLockState ? "lock" : "unlock"}>
                     <PlayerView className="nm-player-view"
-                                selectedTrack={ this.state.selectedTrack }
-                                trackList={ this.state.trackList }
-                                handleSelectionChange={this.tracklistAddChange}
+                                lock={this.state.playerLockState}
+                                selectedTrack={this.state.selectedTrack}
+                                songlist={this.state.songlist}
+                                handleSelectionChange={this.trackSelectionChange}
+                                handleSonglistOpenChange={this.toggleSonglistOpen}
+                                handleLockChange={this.togglePlayerLock}
+                    />
+                    <PlayerSongListPanel className="nm-player-songlist-panel"
+                    playingTrack={this.state.selectedTrack}
+                    songlist={this.state.songlist}
+                    handleToggleChange={this.toggleSonglistOpen}
+                    handleSelectionChange={this.songlistSelectionChange}
+                    open={this.state.songlistOpen}
                     />
                 </footer>
             </div>
@@ -90,35 +100,78 @@ export default class Application extends Component {
     }
 
     trackSelectionChange(track) {
-        if (this.track !== this.state.selectedTrack) {
-            this.setState({selectedTrack: track});
-            this.state.trackList.push(track);
+        if (track) {
+            if (this.state.selectedTrack) {
+                if (track.id !== this.state.selectedTrack.id) {
+                    this.setState({selectedTrack: track});
+                }
+            }
+            else {
+                this.setState({selectedTrack: track});
+            }
         }
     }
 
-    tracklistAddChange(value) {
-        if (this.state.trackList.indexOf(value) < -1) {
-            this.state.push(value);
+    songlistAddChange(value) {
+        if (value === null || value === undefined) {
+            console.log("songlistAddChange params's value cann't be null or undefined!");
+            return;
         }
+        const sameSong = this.state.songlist.find(item => item.id === value.id);
+        if (sameSong === undefined) {
+            this.setState({
+                songlist: this.state.songlist.concat(value)
+            });
+        }
+    }
+
+    songlistSelectionChange(value) {
+        if (!this.state.selectedTrack || (this.state.selectedTrack.id !== value.id)) {
+            this.setState({selectedTrack: value});
+        }
+    }
+
+// 闲置， 可能会用到
+    getPlayingSongIndexOfSonglist() {
+        const track = this.state.selectedTrack;
+        const index = this.state.songlist.findIndex(item => track.id === item.id);
+        return index;
     }
 
     trackInfoChange(data) {
-        this.setState({
-            trackInfo: data
-        });
+        if (data instanceof TrackInfoModel) {
+            this.setState({
+                trackInfo: data
+            });
+        }
+        else {
+            console.log("trackInfoChange params data's type is error. ");
+        }
+
     }
 
     searchSelectionChange(data) {
+        const trackInfo = new TrackInfoModel({data, type: '单曲'});
         this.setState({
-            trackInfo: {
-                imgsrc: data.album.picUrl,
-                name: data.name,
-                artist: data.artists.map(artist => artist.name).join(","),
-                type: "单曲",
-                mp3Url: data.mp3Url
-            },
-            selectedTrack: data,
-            selectedPlaylistId: ""
+            selectedPlaylistId: null
         });
+        this.trackSelectionChange(data);
+        this.trackInfoChange(trackInfo);
+        this.songlistAddChange(trackInfo);
+    }
+
+    toggleSonglistOpen(state = !this.state.songlistOpen) {
+        this.setState({
+            songlistOpen: state
+        });
+    }
+    togglePlayerLock(state = !this.state.playerLockState) {
+        this.setState({
+            playerLockState: state
+        });
+    }
+
+    tempFunc = () => {
+        return null;
     }
 }

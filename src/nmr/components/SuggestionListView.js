@@ -1,15 +1,17 @@
-import React, { Component } from "react";
+import React, { Component, PropTypes } from "react";
 
 import ServiceClient from "../service/ServiceClient";
 
 export default class SuggestionListView extends Component
 {
-    static PropTypes = {
-        data: React.PropTypes.object.isRequired
+    static propTypes = {
+        data: PropTypes.array.isRequired,
+        handleSearchSelectionChange: PropTypes.func.isRequired,
     }
 
     static defaultProps = {
-        data: []
+        data: [],
+        handleSearchSelectionChange: null,
     }
 
     state = {
@@ -28,12 +30,6 @@ export default class SuggestionListView extends Component
         }
     }
 
-    constructor(props)
-    {
-        super(props);
-
-    }
-
     componentWillReceiveProps(nextProps)
     {
         if (nextProps.data)
@@ -48,7 +44,11 @@ export default class SuggestionListView extends Component
         if (this.state.data && Array.isArray(this.state.data))
         {
             this.state.data.forEach( (item, index)=> {
-                $lis.push(<li key={ "nm-item" + index  }  className="suggestion-list-item" onMouseDown={ () => { this._handSelectionChange(item); } }>
+                $lis.push(<li
+                key={ "nm-item" + index  }
+                className="suggestion-list-item"
+                onMouseDown={ () => { this._handSelectionChange(item); } }
+                >
                     <span className="iconfont icon-music"></span>
                     <span>{item.name}</span>
                     <span>{ item.artists.map(artist => artist.name).join(",")} </span>
@@ -64,6 +64,6 @@ export default class SuggestionListView extends Component
     async _handSelectionChange(item)
     {
         const songInfo = await ServiceClient.getInstance().fetchSongDetails(item.id);
-        this.props.handleSelectionChange(songInfo[0]);
+        this.props.handleSearchSelectionChange(songInfo[0]);
     }
 }
