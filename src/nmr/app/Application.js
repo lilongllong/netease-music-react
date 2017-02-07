@@ -1,32 +1,34 @@
-import React, {Component} from "react";
+import React, {Component} from 'react';
 
 import PlayerSongListPanel from '../components/PlayerSongListPanel';
-import PlayerView from "../components/PlayerView";
-import PlayListsView from "../components/PlayListsView";
-import SearchView from "../components/SearchView";
-import ServiceClient from "../service/ServiceClient";
-import TrackInfoView from "../components/TrackInfoView";
-import TrackTableView from "../components/TrackTableView";
+import PlayerView from '../components/PlayerView';
+import PlayListsView from '../components/PlayListsView';
+import SearchView from '../components/SearchView';
+import ServiceClient from '../service/ServiceClient';
+import TrackInfoView from '../components/TrackInfoView';
+import TrackTableView from '../components/TrackTableView';
+
+import TrackInfoModel from '../model/TrackInfoModel';
 
 export default class Application extends Component {
     constructor(props) {
         super(props);
 
-        this.searchSelectionChange = this.searchSelectionChange.bind(this);
         this.playSelectionChange = this.playSelectionChange.bind(this);
+        this.searchSelectionChange = this.searchSelectionChange.bind(this);
+        this.songlistAddChange = this.songlistAddChange.bind(this);
+        this.togglePlayerLock = this.togglePlayerLock.bind(this);
+        this.toggleSonglistOpen = this.toggleSonglistOpen.bind(this);
         this.trackSelectionChange = this.trackSelectionChange.bind(this);
         this.trackInfoChange = this.trackInfoChange.bind(this);
-        this.songlistAddChange = this.songlistAddChange.bind(this);
-        this.toggleSonglistOpen = this.toggleSonglistOpen.bind(this);
-        this.togglePlayerLock = this.togglePlayerLock.bind(this);
+    }
+    
+    static propTypes = {
+        userId: React.PropTypes.string.isRequired
     }
 
     static defaultProps = {
         userId: ""
-    }
-
-    static propTypes = {
-        userId: React.PropTypes.string.isRequired
     }
 
     /* trackInfo = {
@@ -55,7 +57,7 @@ export default class Application extends Component {
                     <h1>网易云音乐</h1>
                     <SearchView className="nm-search-view"
                                 placeholder="请输入"
-                                songlistAddChange={this.songlistAddChange}
+                                handleSearchSelectionChange={this.searchSelectionChange}
                     />
                 </header>
                 <main>
@@ -88,6 +90,7 @@ export default class Application extends Component {
                                 handleLockChange={this.togglePlayerLock}
                     />
                     <PlayerSongListPanel className="nm-player-songlist-panel"
+                    playingTrack={this.state.selectedTrack}
                     songlist={this.state.songlist}
                     handleToggleChange={this.toggleSonglistOpen}
                     handleSelectionChange={this.tempFunc}
@@ -133,23 +136,24 @@ export default class Application extends Component {
     }
 
     trackInfoChange(data) {
-        this.setState({
-            trackInfo: data
-        });
+        if (data instanceof TrackInfoModel) {
+            this.setState({
+                trackInfo: data
+            });
+        }
+        else {
+            console.log("trackInfoChange params data's type is error. ");
+        }
+
     }
 
     searchSelectionChange(data) {
+        const trackInfo = new TrackInfoModel({data, type: '单曲'});
         this.setState({
-            trackInfo: {
-                imgsrc: data.album.picUrl,
-                name: data.name,
-                artist: data.artists.map(artist => artist.name).join(","),
-                type: "单曲",
-                mp3Url: data.mp3Url
-            },
-            selectedTrack: data,
-            selectedPlaylistId: ""
+            selectedPlaylistId: null
         });
+        this.trackSelectionChange(data);
+        this.trackInfoChange(trackInfo);
     }
 
     toggleSonglistOpen(state = !this.state.songlistOpen) {

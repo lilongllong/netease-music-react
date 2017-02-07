@@ -1,7 +1,8 @@
-import React, {Component} from "react";
+import React, {Component} from 'react';
 
-import ServiceClient from "../service/ServiceClient";
-import TimeUtil from "../util/TimeUtil";
+import ServiceClient from '../service/ServiceClient';
+import TimeUtil from '../util/TimeUtil';
+import TrackInfoModel from '../model/TrackInfoModel';
 
 export default class TrackTableView extends Component {
     static defaultProps = {
@@ -11,7 +12,7 @@ export default class TrackTableView extends Component {
     static propTypes = {
         playlistId: React.PropTypes.number
     }
-
+    // selectedTrack 作用发生改变 主要用于显示正在播放的特效
     state = {
         selectedTrack: null,
         data: []
@@ -24,7 +25,7 @@ export default class TrackTableView extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.playlistId !== nextProps.playlistId) {
-            if (nextProps.playlistId && nextProps.playlistId !== "") {
+            if (nextProps.playlistId && nextProps.playlistId !== '') {
                 ServiceClient.getInstance().getPlayListDetail(nextProps.playlistId).then((result) => {
                     if (result && result.tracks && result.tracks !== this.state.data) {
                         this.setState({data: result.tracks});
@@ -111,7 +112,8 @@ export default class TrackTableView extends Component {
     _offerTrackInfo(data, type) {
         console.log(data);
         if (type) {
-            const trackInfo = {
+            const trackInfo = new TrackInfoModel();
+            trackInfo.data = {
                 id: data.id,
                 imgsrc: data.coverImgUrl,
                 name: data.name,
@@ -122,14 +124,7 @@ export default class TrackTableView extends Component {
             this.props.handleInfoChange(trackInfo);
         }
         else {
-            const trackInfo = {
-                id: data.id,
-                imgsrc: data.album.picUrl,
-                name: data.name,
-                artist: data.album.artists.map(artist => artist.name).join(","),
-                type: "单曲",
-                mp3Url: data.mp3Url
-            };
+            const trackInfo = new TrackInfoModel({data, type: '单曲'});
             this.props.handleInfoChange(trackInfo);
         }
     }

@@ -39,11 +39,6 @@ export default class PlayListsView extends React.Component
         </ul>);
     }
 
-    componentDidUpdate()
-    {
-
-    }
-
     async _initData()
     {
          const result = await ServiceClient.getInstance().getUserPlayLists(this.props.userId);

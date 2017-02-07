@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 
+import TrackInfoModel from '../model/TrackInfoModel';
 import ServiceClient from '../service/ServiceClient';
 
 export default class TrackInfoView extends Component
@@ -67,14 +68,8 @@ export default class TrackInfoView extends Component
                         this.props.handleSelectionChange(item);
                     }
                     else {
-                        this.props.songlistAddChange({
-                            id: item.id,
-                            imgsrc: item.album.picUrl,
-                            name: item.name,
-                            artist: item.album.artists.map(artist => artist.name).join(","),
-                            type: "单曲",
-                            mp3Url: item.mp3Url
-                        });
+                        const trackInfo = new Model({data: item, type: '单曲'});
+                        this.props.songlistAddChange(trackInfo);
                     }
                 });
             }

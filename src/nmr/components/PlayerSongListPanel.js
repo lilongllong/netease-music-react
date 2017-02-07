@@ -6,6 +6,9 @@ import ServiceClient from "../service/ServiceClient";
 export default class PlayerSongList extends Component {
     static propTypes = {
         className: PropTypes.string,
+        playingTrack: PropTypes.shape({
+            
+        }),
         handleToggleChange: PropTypes.func.isRequired,
         handleSelectionChange: PropTypes.func.isRequired,
         AddedSong: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array]),
@@ -45,7 +48,7 @@ export default class PlayerSongList extends Component {
                         <div className="label">清除</div>
                     </a>
                     <span className="song-lyric-name"></span>
-                    <a onClick={this.toggle}><span className="iconfont icon-close"><span></a>
+                    <a onClick={this.toggle}><span className="iconfont icon-close"></span></a>
                 </div>
             </div>
             <div className="panel-body">
