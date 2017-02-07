@@ -27,7 +27,7 @@ export default class TrackInfoModel {
     set value(value) {
         this._data = value.data;
         this._id = value.id;
-        this._imgsrc = value.imgSrc;
+        this._imgsrc = value.imgsrc;
         this._name = value.name;
         this._artist = value.artist;
         this._type = value.type;
