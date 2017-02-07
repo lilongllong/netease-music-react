@@ -21,9 +21,7 @@ export default class PlayerSongList extends Component {
 
     state = {
         open: true,
-        showPanel: 'list',
         songlist: [],
-        history: [],
     }
 
     componentWillReceiveProps(nextProps) {
@@ -37,33 +35,30 @@ export default class PlayerSongList extends Component {
     }
 
     render() {
+        const songCount = this.state.songlist.length;
         return (<div className={classNames(this.props.className, 'panel', (this.state.open ? "nm-show" : "nm-hide"))}>
             <div className="panel-header">
-                <p>歌曲列表</p>
-                <div className="panel-title"></div>
-                <div className="panel-extra"></div>
+                <div className="panel-title">{`播放列表(${songCount})`}</div>
+                <div className="panel-extra">
+                    <a className="clearBtn">
+                        <span className="iconfont icon-clear"></span>
+                        <div className="label">清除</div>
+                    </a>
+                    <span className="song-lyric-name"></span>
+                    <a onClick={this.toggle}><span className="iconfont icon-close"><span></a>
+                </div>
             </div>
             <div className="panel-body">
-
+                <div className="songlist-table"></div>
+                <div className="song-lyric"></div>
             </div>
         </div>);
     }
 
-    async createSongTable(type) {
-        switch (type) {
-            case 'list': return await this._createSongListDom();
-            case 'history': return await this._createSongListHistoryDom();
-            default: return false;
-        }
-    }
-
-    async _createSongListDom() {
+    async createSongTable() {
 
     }
 
-    async _createSongListHistoryDom() {
-
-    }
     /**
     * songData: {
     *   songId,
@@ -82,5 +77,8 @@ export default class PlayerSongList extends Component {
         // Add songData to list
     }
 
+    toggle = () => {
+        this.props.handleToggleChange();
+    }
 
 }

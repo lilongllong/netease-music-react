@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-import PlayerSongList from '../components/PlayerSongList';
+import PlayerSongListPanel from '../components/PlayerSongListPanel';
 import PlayerView from "../components/PlayerView";
 import PlayListsView from "../components/PlayListsView";
 import SearchView from "../components/SearchView";
@@ -43,7 +43,6 @@ export default class Application extends Component {
         selectedPlaylistId: null,
         selectedTrack: null,
         songlist: [],
-        songlsitHistory: [],
         trackInfo: null,
         songlistOpen: false,
         playerLockState: false,
@@ -88,7 +87,7 @@ export default class Application extends Component {
                                 handleSonglistOpenChange={this.toggleSonglistOpen}
                                 handleLockChange={this.togglePlayerLock}
                     />
-                    <PlayerSongList className="nm-player-songlist"
+                    <PlayerSongListPanel className="nm-player-songlist-panel"
                     songlist={this.state.songlist}
                     handleToggleChange={this.toggleSonglistOpen}
                     handleSelectionChange={this.tempFunc}
@@ -126,15 +125,12 @@ export default class Application extends Component {
         }
     }
 
-    // songlistHistoryChange(value) {
-    //     if (value === null || value === undefined) {
-    //         console.log("songlistAddChange params's value cann't be null or undefined!");
-    //         return;
-    //     }
-    //     this.setState({
-    //         songlistHistory: this.state.songlistHistory.concat(value);
-    //     });
-    // }
+// 闲置， 可能会用到
+    getPlayingSongIndexOfSonglist() {
+        const track = this.state.selectedTrack;
+        const index = this.state.songlist.findIndex(item => track.id === item.id);
+        return index;
+    }
 
     trackInfoChange(data) {
         this.setState({
