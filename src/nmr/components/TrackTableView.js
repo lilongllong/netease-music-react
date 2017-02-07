@@ -1,18 +1,24 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 
 import ServiceClient from '../service/ServiceClient';
 import TimeUtil from '../util/TimeUtil';
 import TrackInfoModel from '../model/TrackInfoModel';
 
 export default class TrackTableView extends Component {
-    static defaultProps = {
-        playlistId: null
+    static propTypes = {
+        playlistId: PropTypes.number,
+        handleSelectionChange: PropTypes.func.isRequired,
+        songlistAddChange: PropTypes.func.isRequired,
+        handleInfoChange: PropTypes.func.isRequired,
     }
 
-    static propTypes = {
-        playlistId: React.PropTypes.number
+    static defaultProps = {
+        playlistId: null,
+        handleSelectionChange: null,
+        songlistAddChange: null,
+        handleInfoChange: null,
     }
-    // selectedTrack 作用发生改变 主要用于显示正在播放的特效
+
     state = {
         selectedTrack: null,
         data: []
@@ -79,6 +85,7 @@ export default class TrackTableView extends Component {
                 onClick={ () => {
                     this._selectedItem(data.id);
                     this.props.handleSelectionChange(track);
+                    this.props.songlistAddChange(new TrackInfoModel({track, type: '单曲'}));
                 }}
             >
                 {$tds}
@@ -110,16 +117,17 @@ export default class TrackTableView extends Component {
 
     // type false 代表 单曲，TRUE = list
     _offerTrackInfo(data, type) {
-        console.log(data);
         if (type) {
             const trackInfo = new TrackInfoModel();
-            trackInfo.data = {
+            trackInfo.value = {
+                data: null,
                 id: data.id,
                 imgsrc: data.coverImgUrl,
                 name: data.name,
                 artist: data.creator.nickname,
                 type: "歌单",
-                mp3Url: ""
+                mp3Url: "",
+                time: "00:00"
             };
             this.props.handleInfoChange(trackInfo);
         }

@@ -17,12 +17,13 @@ export default class Application extends Component {
         this.playSelectionChange = this.playSelectionChange.bind(this);
         this.searchSelectionChange = this.searchSelectionChange.bind(this);
         this.songlistAddChange = this.songlistAddChange.bind(this);
+        this.songlistSelectionChange = this.songlistSelectionChange.bind(this);
         this.togglePlayerLock = this.togglePlayerLock.bind(this);
         this.toggleSonglistOpen = this.toggleSonglistOpen.bind(this);
         this.trackSelectionChange = this.trackSelectionChange.bind(this);
         this.trackInfoChange = this.trackInfoChange.bind(this);
     }
-    
+
     static propTypes = {
         userId: React.PropTypes.string.isRequired
     }
@@ -76,6 +77,7 @@ export default class Application extends Component {
                         <TrackTableView className="nm-track-table-view striped"
                                         playlistId={ this.state.selectedPlaylistId }
                                         handleSelectionChange={this.trackSelectionChange}
+                                        songlistAddChange={this.songlistAddChange}
                                         handleInfoChange={this.trackInfoChange}
                         />
                     </section>
@@ -85,7 +87,7 @@ export default class Application extends Component {
                                 lock={this.state.playerLockState}
                                 selectedTrack={this.state.selectedTrack}
                                 songlist={this.state.songlist}
-                                handleSelectionChange={this.songlistAddChange}
+                                handleSelectionChange={this.trackSelectionChange}
                                 handleSonglistOpenChange={this.toggleSonglistOpen}
                                 handleLockChange={this.togglePlayerLock}
                     />
@@ -93,7 +95,7 @@ export default class Application extends Component {
                     playingTrack={this.state.selectedTrack}
                     songlist={this.state.songlist}
                     handleToggleChange={this.toggleSonglistOpen}
-                    handleSelectionChange={this.tempFunc}
+                    handleSelectionChange={this.songlistSelectionChange}
                     open={this.state.songlistOpen}
                     />
                 </footer>
@@ -108,10 +110,15 @@ export default class Application extends Component {
     }
 
     trackSelectionChange(track) {
-        if (this.track !== this.state.selectedTrack) {
-            this.setState({selectedTrack: track});
-            this.songlistAddChange(track);
-
+        if (track) {
+            if (this.state.selectedTrack) {
+                if (track.id !== this.state.selectedTrack.id) {
+                    this.setState({selectedTrack: track});
+                }
+            }
+            else {
+                this.setState({selectedTrack: track});
+            }
         }
     }
 
@@ -125,6 +132,12 @@ export default class Application extends Component {
             this.setState({
                 songlist: this.state.songlist.concat(value)
             });
+        }
+    }
+
+    songlistSelectionChange(value) {
+        if (!this.state.selectedTrack || (this.state.selectedTrack.id !== value.id)) {
+            this.setState({selectedTrack: value});
         }
     }
 
@@ -154,6 +167,7 @@ export default class Application extends Component {
         });
         this.trackSelectionChange(data);
         this.trackInfoChange(trackInfo);
+        this.songlistAddChange(trackInfo);
     }
 
     toggleSonglistOpen(state = !this.state.songlistOpen) {

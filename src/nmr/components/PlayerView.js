@@ -46,11 +46,9 @@ export default class PlayerView extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps && nextProps.selectedTrack.id !== this.state.onPlayTrack.id) {
-            this._initPlayer();
-        }
 
-        if (nextProps.selectedTrack) {
+        if (nextProps.selectedTrack !== this.onPlayTrack) {
+            this._initPlayer();
             this._initSelectedTrack(nextProps.selectedTrack);
         }
 
@@ -196,8 +194,8 @@ export default class PlayerView extends Component {
             }
             else if (index > 0) {
                 const track = this.state.songlist[index - 1 > 0 ? index - 1 : 0];
-                this.setState({onPlayTrack: track});
-                this._initSelectedTrack(track);
+                // this.setState({onPlayTrack: track.data});
+                this.props.handleSelectionChange(track.data);
             }
             else {
                 alert('歌单已清空');
@@ -214,8 +212,8 @@ export default class PlayerView extends Component {
             }
             else if (index >= 0 ) {
                 const track = this.state.songlist[index + 1 > 0 ? index + 1 : 0];
-                this.setState({onPlayTrack: track});
-                this._initSelectedTrack(track);
+                // this.setState({onPlayTrack: track.data});
+                this.props.handleSelectionChange(track.data);
             }
             else {
                 alert('歌单已清空');
@@ -237,33 +235,29 @@ export default class PlayerView extends Component {
     }
 
     _initPlayer() {
-        console.log('init player');
         this.setState({playState: false});
         this.playingBar.style.width = "0px";
-        this.processIcon.style.left = "0px";
+        this.processIcon.style.left = "-8px";
     }
 
     _initSelectedTrack(track) {
         if (track) {
-            ServiceClient.getInstance().fetchSongDetails(track.id).then(result => {
-                const track = result[0];
-                let duration = 0;
-                if (track.lMusic) {
-                    duration = track.lMusic.playTime;
-                }
-                else {
-                    duration = track.duration;
-                }
-                this.setState({
-                    onPlayTrack: track,
-                    playState: true,
-                    duration: "/" + TimeUtil.formateTime(duration),
-                    currentTime: "00:00",
-                    imgSrc: track.album.blurPicUrl,
-                    artistName: track.artists.map(artist => artist.name).join(","),
-                    trackName: track.name,
-                    mp3Url: track.mp3Url
-                });
+            let duration = 0;
+            if (track.lMusic) {
+                duration = track.lMusic.playTime;
+            }
+            else {
+                duration = track.duration;
+            }
+            this.setState({
+                onPlayTrack: track,
+                playState: true,
+                duration: "/" + TimeUtil.formateTime(duration),
+                currentTime: "00:00",
+                imgSrc: track.album.blurPicUrl,
+                artistName: track.artists.map(artist => artist.name).join(","),
+                trackName: track.name,
+                mp3Url: track.mp3Url
             });
         }
         else {
@@ -340,7 +334,6 @@ export default class PlayerView extends Component {
 
     //进度条点击事件监听器
     _handleProcess(e) {
-        console.log("process click");
         let processLeft = $('.track-process').offset().left;
         const left = e.clientX - processLeft - 16;
         this._processControl(left, true);

@@ -1,3 +1,5 @@
+import TimeUtil from '../util/TimeUtil';
+
 export default class TrackInfoModel {
     /*
     {
@@ -12,20 +14,24 @@ export default class TrackInfoModel {
     constructor(props) {
         if (props && props.data && props.type) {
             const data = props.data;
+            this._data = data;
             this._id = data.id;
             this._imgsrc = data.album.picUrl;
             this._name = data.name;
             this._artist = data.album.artists.map(artist => artist.name).join(",");
             this._type = props.type;
+            this._time = TimeUtil.formateTime(data.lmusic ? data.lMusic.playTime : data.duration)
         }
     }
 
-    set data(value) {
+    set value(value) {
+        this._data = value.data;
         this._id = value.id;
         this._imgsrc = value.imgSrc;
         this._name = value.name;
         this._artist = value.artist;
         this._type = value.type;
+        this._time = value.time;
     }
 
     get id() {
@@ -46,6 +52,14 @@ export default class TrackInfoModel {
 
     get type() {
         return this._type;
+    }
+
+    get time() {
+        return this._time;
+    }
+
+    get data() {
+        return this._data;
     }
 
     equal(data) {

@@ -1,14 +1,14 @@
+import classnames from 'classnames';
 import React, { Component, PropTypes } from 'react';
-import classNames from 'classnames';
+import TrackInfoModel from '../model/TrackInfoModel';
 
 import ServiceClient from "../service/ServiceClient";
 
 export default class PlayerSongList extends Component {
     static propTypes = {
         className: PropTypes.string,
-        playingTrack: PropTypes.shape({
-            
-        }),
+        songlist: PropTypes.array.isRequired,
+        playingTrack: PropTypes.object,
         handleToggleChange: PropTypes.func.isRequired,
         handleSelectionChange: PropTypes.func.isRequired,
         AddedSong: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array]),
@@ -17,6 +17,8 @@ export default class PlayerSongList extends Component {
 
     static defaultProps = {
         className: null,
+        songlist: null,
+        playingTrack: null,
         handleToggleChange: null,
         handleSelectionChange: null,
         AddedSong: null,
@@ -38,8 +40,8 @@ export default class PlayerSongList extends Component {
     }
 
     render() {
-        const songCount = this.state.songlist.length;
-        return (<div className={classNames(this.props.className, 'panel', (this.state.open ? "nm-show" : "nm-hide"))}>
+        const songCount = this.props.songlist.length;
+        return (<div className={classnames(this.props.className, 'panel', (this.state.open ? "nm-show" : "nm-hide"))}>
             <div className="panel-header">
                 <div className="panel-title">{`播放列表(${songCount})`}</div>
                 <div className="panel-extra">
@@ -47,37 +49,50 @@ export default class PlayerSongList extends Component {
                         <span className="iconfont icon-clear"></span>
                         <div className="label">清除</div>
                     </a>
-                    <span className="song-lyric-name"></span>
-                    <a onClick={this.toggle}><span className="iconfont icon-close"></span></a>
+                    <span className="song-lyric-name">{this.props.playingTrack ? this.props.playingTrack.name : ""}</span>
+                    <a className="songlist-close" onClick={this.toggle}><span className="iconfont icon-close"></span></a>
                 </div>
             </div>
             <div className="panel-body">
-                <div className="songlist-table"></div>
+                <div className="songlist-table">
+                    {this.createSongTable()}
+                </div>
                 <div className="song-lyric"></div>
             </div>
         </div>);
     }
 
-    async createSongTable() {
-
+    createSongTable() {
+        if (this.props.songlist) {
+            const result = this.props.songlist.map(item => {
+                let isActive = false;
+                if (this.props.playingTrack && this.props.playingTrack.id === item.id) {
+                    isActive = true;
+                }
+                return (<tr
+                key={item.id}
+                data-id={item.id}
+                data-track={JSON.stringify(item.data)}
+                onClick={this.handleSelectionChange}
+                className={ classnames("songlist-item", (isActive ? "active" : ""))}
+                >
+                    <td key={`${item.id}-icon`} className="playing-icon"><span className={(isActive ? "iconfont icon-playing-triangle" : "")}></span></td>
+                    <td key={`${item.id}-name`} className="song-name">{item.name}</td>
+                    <td key={`${item.id}-artist`} className="song-artist">{item.artist}</td>
+                    <td key={`${item.id}-duration`} className="song-duration">{item.time}</td>
+                </tr>);
+            });
+            return (<table><tbody>{result}</tbody></table>)
+        }
+        return null;
     }
 
-    /**
-    * songData: {
-    *   songId,
-    *   songName,
-    *   songArtist,
-    *   time
-    *    }
-    **/
-    AddSongToHistory = (songData) => {
-        // TODO
-        // Add songData to history
-    }
-
-    AddSongToList = (songData) => {
-        // TODO
-        // Add songData to list
+    handleSelectionChange = (e) => {
+        const id = e.currentTarget.dataset.id;
+        const data = JSON.parse(e.currentTarget.dataset.track);
+        if (id && id !== this.props.playingTrack.id) {
+            this.props.handleSelectionChange(data);
+        }
     }
 
     toggle = () => {

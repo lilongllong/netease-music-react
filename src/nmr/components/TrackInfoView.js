@@ -63,14 +63,11 @@ export default class TrackInfoView extends Component
             const result = await ServiceClient.getInstance().getPlayListDetail(this.state.data.id);
             if (result) {
                 result.tracks.map((item, index) => {
-                    // console.log(item);
                     if (index === 0) {
                         this.props.handleSelectionChange(item);
                     }
-                    else {
-                        const trackInfo = new TrackInfoModel({data: item, type: '单曲'});
-                        this.props.songlistAddChange(trackInfo);
-                    }
+                    const trackInfo = new TrackInfoModel({data: item, type: '单曲'});
+                    this.props.songlistAddChange(trackInfo);
                 });
             }
         }
