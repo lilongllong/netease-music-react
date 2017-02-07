@@ -119,6 +119,7 @@ export default class TrackTableView extends Component {
     _offerTrackInfo(data, type) {
         if (type) {
             const trackInfo = new TrackInfoModel();
+            console.log(data, "list");
             trackInfo.value = {
                 data: null,
                 id: data.id,

@@ -43,8 +43,7 @@ export default class TrackInfoView extends Component
             <div className="track-img"><img src={ this.state.data.imgsrc }/></div>
             <div className="track-info">
                 <div className="track-name">
-                    <span className="iconfont icon-type-tag2"></span>
-                    <label>{this.state.data.type}</label>
+                    <div className="iconfont icon-type-tag2"><label>{this.state.data.type}</label></div>
                     <span className="track-name-text"> { this.state.data.name } </span>
                 </div>
                 <div className="track-artists">{ this.state.data.artist }</div>
