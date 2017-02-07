@@ -78,7 +78,6 @@ export default class TrackTableView extends Component {
                 onClick={ () => {
                     this._selectedItem(data.id);
                     this.props.handleSelectionChange(track);
-                    this._offerTrackInfo(track, false);
                 }}
             >
                 {$tds}
