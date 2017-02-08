@@ -5,7 +5,7 @@
 
 ## 部署
 本项目存在Dockerfile,可以再daocluod等平台直接github库部署:tada:  
-app已经部署到daocloud的net-ease应用🎉[net-ease-music应用](http://devin6-net-ease.daoapp.io/);
+app已经部署到daocloud的net-ease应用🎉[net-ease-music应用](http://devin6-net-ease-music.daoapp.io);
 
 ## 环境
 - 安装nodejs
