@@ -7,10 +7,6 @@
 本项目存在Dockerfile,可以再daocluod等平台直接github库部署:tada:  
 app已经部署到daocloud的net-ease应用🎉[net-ease-music应用](http://devin6-net-ease.daoapp.io/);
 
-## 缺陷
-1, state冗余，需要整理和削减
-2, trackInfo 和 player 两者的联动设计不合理，需要修正
-
 ## 环境
 - 安装nodejs
 - 安装git
@@ -56,6 +52,8 @@ npm start
 - 歌词展示模块。这一部分同样预留了代码接口，详情看代码(songlist component song-lyric模块)
 - 个人网易云音乐ID的更换。一开始仅仅想自己用，并未为它设计图形界面，但在代码('src/service/ServiceClient.js'- __pseudoLogin function)可以修改
 - suggestionlist的样式需要优化。选中效果，scroll的样式，条目的展示效果等等
+### 开发寄语
+我发现react面对复杂状态控制出现1，state冗余; 2,component联动设计不合理。建议各位可以采用 react + redux 来重构该项目。
 
 ## 作者寄语
 该app设计和代码还存在缺陷，欢迎各位的批评和指正，具体请到issue版块反馈，我会及时回复:smile:
