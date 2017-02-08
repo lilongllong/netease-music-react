@@ -82,9 +82,11 @@ export default class PlayerView extends Component {
         this.volumeBar.style.width = "50px";
 
         this.audio.onended = () => {
-            this._initPlayer();
-            this.audio.play();
-            this.setState({playState: true});
+            // this._initPlayer();
+            // this.audio.play();
+            // this.setState({playState: true});
+            console.log("next song");
+            this._nextTrack();
         };
 
         this.audio.onerror = () => {
