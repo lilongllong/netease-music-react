@@ -121,10 +121,11 @@ export default class Application extends Component {
             console.log("songlistAddChange params's value cann't be null or undefined!");
             return;
         }
+        
         const sameSong = this.state.songlist.find(item => item.id === value.id);
         if (sameSong === undefined) {
             this.setState({
-                songlist: this.state.songlist.concat(value)
+                songlist: [value].concat(this.state.songlist)
             });
         }
     }
