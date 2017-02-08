@@ -59,7 +59,7 @@ export default class Application extends Component {
                         />
                     </aside>
                     <section className="content">
-                        <TrackInfoView className="nm-track-info-view"
+                        <TrackInfoView ref="trackInfoView" className="nm-track-info-view"
                                        data={ this.state.trackInfo }
                                        handleSelectionChange={this.trackSelectionChange}
                                        songlistAddChange={this.songlistAddChange}
@@ -95,8 +95,12 @@ export default class Application extends Component {
 
     playSelectionChange(playlistId) {
         if (playlistId !== this.state.selectedPlaylistId) {
+            // $('section.content').animate({opacity: 0}, 50, 'linear').animate({opacity: 1}, 50, 'linear');
+            // $('section.content').css({opacity: 0});
+            $('section.content').scrollTop(0);
             this.setState({selectedPlaylistId: playlistId});
         }
+
     }
 
     trackSelectionChange(track) {
@@ -117,10 +121,11 @@ export default class Application extends Component {
             console.log("songlistAddChange params's value cann't be null or undefined!");
             return;
         }
+        
         const sameSong = this.state.songlist.find(item => item.id === value.id);
         if (sameSong === undefined) {
             this.setState({
-                songlist: this.state.songlist.concat(value)
+                songlist: [value].concat(this.state.songlist)
             });
         }
     }

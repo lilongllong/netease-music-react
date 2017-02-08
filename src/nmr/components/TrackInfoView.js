@@ -25,6 +25,11 @@ export default class TrackInfoView extends Component
     constructor(props)
     {
         super(props);
+        this.signUpRootNode = (node) => {
+            if (node) {
+                this._rootNode = node;
+            }
+        };
         this._initTrack(props.data);
     }
 
@@ -33,13 +38,25 @@ export default class TrackInfoView extends Component
         this._initTrack(nextProps.data);
     }
 
+    componentWillUpdate(nextProps, nextState) {
+        if (nextProps.data !== this.props.data && this._rootNode) {
+            $(this._rootNode).animate({opacity: 0}, 20, "linear");
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.data !== this.props.data && this._rootNode) {
+            $(this._rootNode).animate({opacity: 1}, 50, "linear");
+        }
+    }
+
     render()
     {
         if (this.state.data === null)
         {
             return (<div className={ this.props.className || ""}> </div>);
         }
-        return (<div className={ this.props.className || ""}>
+        return (<div ref={this.signUpRootNode} className={ this.props.className || ""}>
             <div className="track-img"><img src={ this.state.data.imgsrc }/></div>
             <div className="track-info">
                 <div className="track-name">
