@@ -1,7 +1,7 @@
 # netease-music-app
 
 使用react + nodejs + es6 技术实现高仿网易云音乐网页版
-!["图片缺失"](https://github.com/lilongllong/netease-music-react/blob/master/docs/netease-music-juke-music.png?raw=true);
+!["图片缺失"](https://github.com/lilongllong/netease-music-react/blob/master/docs/netease-music-juke-music.png?raw=true)
 
 ## 部署
 本项目存在Dockerfile,可以再daocluod等平台直接github库部署:tada:  
@@ -52,6 +52,7 @@ npm start
 - 歌词展示模块。这一部分同样预留了代码接口，详情看代码(songlist component song-lyric模块)
 - 个人网易云音乐ID的更换。一开始仅仅想自己用，并未为它设计图形界面，但在代码('src/service/ServiceClient.js'- __pseudoLogin function)可以修改
 - suggestionlist的样式需要优化。选中效果，scroll的样式，条目的展示效果等等
+
 ### 开发寄语
 我发现react面对复杂状态控制出现1，state冗余; 2,component联动设计不合理。建议各位可以采用 react + redux 来重构该项目。
 
