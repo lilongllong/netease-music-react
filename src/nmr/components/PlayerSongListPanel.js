@@ -8,21 +8,21 @@ import ServiceClient from "../service/ServiceClient";
 export default class PlayerSongList extends Component {
     static propTypes = {
         className: PropTypes.string,
-        songlist: PropTypes.array.isRequired,
         playingTrack: PropTypes.object,
+        songlist: PropTypes.array.isRequired,
+        open: PropTypes.bool.isRequired,
         handleToggleChange: PropTypes.func.isRequired,
         handleSelectionChange: PropTypes.func.isRequired,
-        AddedSong: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array]),
-        open: PropTypes.bool.isRequired,
+        handleSonglistClearAllChange: PropTypes.func.isRequired,
     };
 
     static defaultProps = {
         className: null,
-        songlist: null,
         playingTrack: null,
+        songlist: null,
         handleToggleChange: null,
         handleSelectionChange: null,
-        AddedSong: null,
+        handleSonglistClearAllChange: null,
     }
 
     state = {
@@ -70,7 +70,7 @@ export default class PlayerSongList extends Component {
             <div className="panel-header">
                 <div className="panel-title">{`播放列表(${songCount})`}</div>
                 <div className="panel-extra">
-                    <a className="clearBtn">
+                    <a className="clearBtn" onClick={this.clearAllSonglist}>
                         <span className="iconfont icon-clear"></span>
                         <div className="label">清除</div>
                     </a>
@@ -119,6 +119,10 @@ export default class PlayerSongList extends Component {
         if (id && id !== this.props.playingTrack.id) {
             this.props.handleSelectionChange(data);
         }
+    }
+
+    clearAllSonglist = (e) => {
+        this.props.handleSonglistClearAllChange();
     }
 
     toggle = () => {

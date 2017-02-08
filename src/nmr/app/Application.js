@@ -17,6 +17,7 @@ export default class Application extends Component {
         this.playSelectionChange = this.playSelectionChange.bind(this);
         this.searchSelectionChange = this.searchSelectionChange.bind(this);
         this.songlistAddChange = this.songlistAddChange.bind(this);
+        this.songlistClearAllChange = this.songlistClearAllChange.bind(this);
         this.songlistSelectionChange = this.songlistSelectionChange.bind(this);
         this.togglePlayerLock = this.togglePlayerLock.bind(this);
         this.toggleSonglistOpen = this.toggleSonglistOpen.bind(this);
@@ -84,9 +85,10 @@ export default class Application extends Component {
                     <PlayerSongListPanel className="nm-player-songlist-panel"
                     playingTrack={this.state.selectedTrack}
                     songlist={this.state.songlist}
+                    open={this.state.songlistOpen}
                     handleToggleChange={this.toggleSonglistOpen}
                     handleSelectionChange={this.songlistSelectionChange}
-                    open={this.state.songlistOpen}
+                    handleSonglistClearAllChange={this.songlistClearAllChange}
                     />
                 </footer>
             </div>
@@ -121,7 +123,7 @@ export default class Application extends Component {
             console.log("songlistAddChange params's value cann't be null or undefined!");
             return;
         }
-        
+
         const sameSong = this.state.songlist.find(item => item.id === value.id);
         if (sameSong === undefined) {
             this.setState({
@@ -130,17 +132,16 @@ export default class Application extends Component {
         }
     }
 
+    songlistClearAllChange() {
+        this.setState({
+            songlist: []
+        });
+    }
+
     songlistSelectionChange(value) {
         if (!this.state.selectedTrack || (this.state.selectedTrack.id !== value.id)) {
             this.setState({selectedTrack: value});
         }
-    }
-
-// 闲置， 可能会用到
-    getPlayingSongIndexOfSonglist() {
-        const track = this.state.selectedTrack;
-        const index = this.state.songlist.findIndex(item => track.id === item.id);
-        return index;
     }
 
     trackInfoChange(data) {
@@ -174,9 +175,5 @@ export default class Application extends Component {
         this.setState({
             playerLockState: state
         });
-    }
-
-    tempFunc = () => {
-        return null;
     }
 }

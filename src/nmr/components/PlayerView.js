@@ -47,7 +47,7 @@ export default class PlayerView extends Component {
 
     componentWillReceiveProps(nextProps) {
 
-        if (nextProps.selectedTrack !== this.onPlayTrack) {
+        if (nextProps.selectedTrack !== this.state.onPlayTrack) {
             this._initPlayer();
             this._initSelectedTrack(nextProps.selectedTrack);
         }
