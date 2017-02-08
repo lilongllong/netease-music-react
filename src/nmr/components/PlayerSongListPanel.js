@@ -1,5 +1,6 @@
 import classnames from 'classnames';
 import React, { Component, PropTypes } from 'react';
+import scrollIntoViewIfNeeded from 'scroll-into-view-if-needed';
 import TrackInfoModel from '../model/TrackInfoModel';
 
 import ServiceClient from "../service/ServiceClient";
@@ -29,6 +30,21 @@ export default class PlayerSongList extends Component {
         songlist: [],
     }
 
+    constructor(props) {
+        super(props);
+        this.setSignupNode = (node) => {
+            if (node) {
+                this._signupNode = node;
+            }
+        }
+        this.goToSignupNode = () => {
+            scrollIntoViewIfNeeded(this._signupNode, true, {
+                duration: 150,
+                easing: 'easeInOut',
+            });
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
         if (nextProps && nextProps.AddedSong) {
             // add song to player's songlist
@@ -38,6 +54,15 @@ export default class PlayerSongList extends Component {
             this.setState({open: nextProps.open});
         }
     }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this._signupNode) {
+            this.goToSignupNode();
+        }
+    }
+
+
+
 
     render() {
         const songCount = this.props.songlist.length;
@@ -71,6 +96,7 @@ export default class PlayerSongList extends Component {
                 }
                 return (<tr
                 key={item.id}
+                ref={isActive ? this.setSignupNode : item.id}
                 data-id={item.id}
                 data-track={JSON.stringify(item.data)}
                 onClick={this.handleSelectionChange}
