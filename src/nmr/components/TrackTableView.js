@@ -85,7 +85,7 @@ export default class TrackTableView extends Component {
                 onClick={ () => {
                     this._selectedItem(data.id);
                     this.props.handleSelectionChange(track);
-                    this.props.songlistAddChange(new TrackInfoModel({track, type: '单曲'}));
+                    this.props.songlistAddChange(new TrackInfoModel({data: track, type: '单曲'}));
                 }}
             >
                 {$tds}
