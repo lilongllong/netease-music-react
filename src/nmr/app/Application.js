@@ -39,7 +39,7 @@ export default class Application extends Component {
         songlist: [],
         trackInfo: null,
         songlistOpen: false,
-        playerLockState: false,
+        playerLockState: true,
     }
 
     render() {
