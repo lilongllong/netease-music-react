@@ -5,7 +5,14 @@
 
 ## 部署
 本项目存在Dockerfile,可以再daocluod等平台直接github库部署:tada:  
-app已经部署到daocloud的net-ease应用🎉[net-ease-music应用](http://devin6-net-ease.daoapp.io/);
+app已经部署到daocloud的net-ease应用🎉[net-ease-music应用](http://devin6-net-ease.daoapp.io/)(daocloud不稳定，不能保证能正常访问到);
+
+/lib 和 /public 是部署所需文件
+```
+// 部署环境运行
+npm start
+```
+
 
 ## 环境
 - 安装nodejs
@@ -25,9 +32,9 @@ npm install -dev
 ```
 ## 运行
 ```
-npm start
+// 开发环境
+npm run dev
 ```
-
 ## 实现功能
 ### app 功能
 - 网易云音乐歌单列表PlayList
@@ -37,6 +44,7 @@ npm start
 - 搜索Search
 - 搜索结果展示SuggestionList
 - 播放列表Songlist
+- 歌词展示-随时间滚动待做
 
 ### 开发者功能
 - webpack

@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./server.js"
+    "start": "node ./lib/server.js",
+    "dev": "node ./server.js"
   },
   "repository": {
     "type": "git",
@@ -45,6 +46,8 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
+    "compression": "^1.6.2",
+    "http-proxy-middleware": "^0.17.4",
     "scroll-into-view-if-needed": "^1.0.6",
     "urlencode": "^1.1.0"
   }

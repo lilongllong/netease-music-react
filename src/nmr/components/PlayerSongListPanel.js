@@ -1,4 +1,5 @@
 import classnames from 'classnames';
+import LyricComponent from './LyricComponent';
 import React, { Component, PropTypes } from 'react';
 import scrollIntoViewIfNeeded from 'scroll-into-view-if-needed';
 import TrackInfoModel from '../model/TrackInfoModel';
@@ -82,7 +83,9 @@ export default class PlayerSongList extends Component {
                 <div className="songlist-table">
                     {this.createSongTable()}
                 </div>
-                <div className="song-lyric"></div>
+                <div className="song-lyric">
+                    <LyricComponent songId={this.props.playingTrack ? this.props.playingTrack.id : null} time={"00"} />
+                </div>
             </div>
         </div>);
     }
