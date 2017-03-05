@@ -31813,7 +31813,7 @@ webpackJsonp([0],[
 	}(_react.Component);
 
 	LyricComponent.propTypes = {
-	    songId: _react.PropTypes.string.isRequired,
+	    songId: _react.PropTypes.number,
 	    time: _react.PropTypes.string.isRequired
 	};
 	LyricComponent.defaultProps = {
