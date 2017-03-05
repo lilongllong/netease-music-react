@@ -6,7 +6,7 @@ import ServiceClient from '../service/ServiceClient';
 export default class LyricComponent extends Component {
 
     static propTypes = {
-        songId: PropTypes.string.isRequired,
+        songId: PropTypes.string,
         time: PropTypes.string.isRequired,
     };
 
@@ -63,7 +63,7 @@ export default class LyricComponent extends Component {
 
     // data: time, lyric
     createLyricItem(data) {
-        
+
         return (<li key={data.time} className={classnames('lyric-item')}>{data.content}</li>);
     }
 
