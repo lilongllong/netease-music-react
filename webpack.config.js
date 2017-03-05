@@ -16,7 +16,7 @@ module.exports = {
     },
 
     output: {
-        path: path.resolve("./assets"),
+        path: path.resolve("./public/assets"),
         publicPath: "/assets",
         filename: "[name]/bundle.js"
     },

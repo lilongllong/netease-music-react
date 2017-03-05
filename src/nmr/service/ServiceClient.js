@@ -169,6 +169,25 @@ export default class ServiceClient
                 reject("network is bad!" + JSON.stringify(e));
             });
         });
-
     }
+    fetchSongLyric(songId) {
+         // 'http://music.163.com/api/song/lyric?os=pc&id=' . $music_id . '&lv=-1&kv=-1&tv=-1'
+         return new Promise((resolve, reject) => {
+             fetch(`/api/song/lyric?os=pc&id=${songId}&lv=-1&kv=-1`).then(response => {
+                 if (response.ok) {
+                     response.json().then(data => {
+                         if (data.code === 200) {
+                             resolve(data.lrc);
+                         }
+                         else {
+                             reject('未请求到数据');
+                         }
+                     });
+                 }
+                 else {
+                     reject('request is failed');
+                 }
+             });
+         });
+     }
 }

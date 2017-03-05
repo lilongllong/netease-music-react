@@ -94,7 +94,6 @@ export default class PlayerView extends Component {
         };
 
         this.audio.oncanplay = () => {
-            // this.playStateBtn.classList.remove("clickDisabled");
             this.audio.play();
             this.setState({playState: true});
             this.forceUpdate();
