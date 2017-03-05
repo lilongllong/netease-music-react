@@ -12,8 +12,6 @@ app已经部署到daocloud的net-ease应用🎉[net-ease-music应用](http://dev
 // 部署环境运行
 npm start
 ```
-
-
 ## 环境
 - 安装nodejs
 - 安装git
