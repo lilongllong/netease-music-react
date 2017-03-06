@@ -65,7 +65,7 @@ export default class TrackInfoView extends Component
                 </div>
                 <div className="track-artists">{ this.state.data.artist }</div>
                 <div className="operation-btn">
-                    <button className="icon icon-font icon-play-btn" onClick={this.playPlaylist}>播放全部</button>
+                    <a className="icon icon-font icon-play-btn" onClick={this.playPlaylist}>播放全部</a>
                 </div>
             </div>
         </div>);
