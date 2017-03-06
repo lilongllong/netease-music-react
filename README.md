@@ -1,7 +1,7 @@
 # netease-music-app
 
 使用react + nodejs + es6 技术实现高仿网易云音乐网页版
-!["图片缺失"](https://github.com/lilongllong/netease-music-react/blob/master/docs/netease-music-juke-music.png?raw=true)
+!["图片缺失"](https://github.com/lilongllong/netease-music-react/blob/master/docs/netease-music-juke-music-new.png?raw=true)
 
 ## 部署
 本项目存在Dockerfile,可以再daocluod等平台直接github库部署:tada:  
