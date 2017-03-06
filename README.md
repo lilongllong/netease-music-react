@@ -42,7 +42,7 @@ npm run dev
 - 搜索Search
 - 搜索结果展示SuggestionList
 - 播放列表Songlist
-- 歌词展示-随时间滚动待做
+- 歌词展示
 
 ### 开发者功能
 - webpack
