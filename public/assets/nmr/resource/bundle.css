@@ -1,9 +1,4 @@
 /*
-五种字号的大小，不能凭借心情定义字体
-zhineng touguo leilimian shehzi
-
-*/
-/*
 over wirite
 NJU theme
 */
@@ -493,21 +488,27 @@ body,
   height: 40px;
 }
 .nm-lyric > .lyric-list {
-  list-style: none;
-  margin: 21px 40px;
-  padding: 0;
+  margin: 0;
+  padding: 21px 40px;
+  width: 100%;
 }
-.nm-lyric > .lyric-list > .lyric-item {
+.nm-lyric > .lyric-list > tbody {
+  width: 100%;
+}
+.nm-lyric > .lyric-list .lyric-item {
   width: 100%;
   height: 32px;
+}
+.nm-lyric > .lyric-list .lyric-item.active > * {
+  color: white;
+}
+.nm-lyric > .lyric-list .lyric-item > * {
+  width: 100%;
   line-height: 32px;
   font-size: 14px;
   text-align: center;
   color: #989898;
   word-wrap: break-word;
-}
-.nm-lyric > .lyric-list > .lyric-item.active {
-  color: white;
 }
 .nm-play-list-view {
   line-height: 30px;
@@ -534,10 +535,6 @@ body,
 }
 .nm-play-list-view li:hover {
   background-color: #eee;
-}
-.nm-play-list-view li:active {
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
-  transform: translate(-1px, -1px);
 }
 .nm-player-songlist-panel {
   position: absolute;
@@ -1052,4 +1049,17 @@ body,
   color: #333333;
   overflow: hidden;
   text-overflow: clip;
+}
+.nm-track-info-view > .track-info > .operation-btn > .icon-play-btn {
+  height: 31px;
+  font-size: 12px;
+  line-height: 31px;
+  overflow: hidden;
+  vertical-align: top;
+  text-align: center;
+  cursor: pointer;
+  background-color: #1e6fbf;
+  color: white;
+  border-radius: 3px;
+  padding: 0 10px;
 }
