@@ -19,6 +19,7 @@ export default class Application extends Component {
         this.songlistAddChange = this.songlistAddChange.bind(this);
         this.songlistClearAllChange = this.songlistClearAllChange.bind(this);
         this.songlistSelectionChange = this.songlistSelectionChange.bind(this);
+        this.songProcessTimeChange = this.songProcessTimeChange.bind(this);
         this.togglePlayerLock = this.togglePlayerLock.bind(this);
         this.toggleSonglistOpen = this.toggleSonglistOpen.bind(this);
         this.trackSelectionChange = this.trackSelectionChange.bind(this);
@@ -40,6 +41,7 @@ export default class Application extends Component {
         trackInfo: null,
         songlistOpen: false,
         playerLockState: true,
+        songProcessTime: null,
     }
 
     render() {
@@ -80,12 +82,14 @@ export default class Application extends Component {
                                 songlist={this.state.songlist}
                                 handleSelectionChange={this.trackSelectionChange}
                                 handleSonglistOpenChange={this.toggleSonglistOpen}
+                                handleSongProcessTime={this.songProcessTimeChange}
                                 handleLockChange={this.togglePlayerLock}
                     />
                     <PlayerSongListPanel className="nm-player-songlist-panel"
                     playingTrack={this.state.selectedTrack}
                     songlist={this.state.songlist}
                     open={this.state.songlistOpen}
+                    songProcessTime={this.state.songProcessTime}
                     handleToggleChange={this.toggleSonglistOpen}
                     handleSelectionChange={this.songlistSelectionChange}
                     handleSonglistClearAllChange={this.songlistClearAllChange}
@@ -142,6 +146,12 @@ export default class Application extends Component {
         if (!this.state.selectedTrack || (this.state.selectedTrack.id !== value.id)) {
             this.setState({selectedTrack: value});
         }
+    }
+
+    songProcessTimeChange(time) {
+        this.setState({
+            songProcessTime: time,
+        });
     }
 
     trackInfoChange(data) {

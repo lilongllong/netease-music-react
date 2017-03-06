@@ -12,6 +12,7 @@ export default class PlayerSongList extends Component {
         playingTrack: PropTypes.object,
         songlist: PropTypes.array.isRequired,
         open: PropTypes.bool.isRequired,
+        songProcessTime: PropTypes.number,
         handleToggleChange: PropTypes.func.isRequired,
         handleSelectionChange: PropTypes.func.isRequired,
         handleSonglistClearAllChange: PropTypes.func.isRequired,
@@ -47,10 +48,6 @@ export default class PlayerSongList extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps && nextProps.AddedSong) {
-            // add song to player's songlist
-        }
-
         if (this.state.open !== nextProps.open) {
             this.setState({open: nextProps.open});
         }
@@ -61,9 +58,6 @@ export default class PlayerSongList extends Component {
             this.goToSignupNode();
         }
     }
-
-
-
 
     render() {
         const songCount = this.props.songlist.length;
@@ -84,7 +78,7 @@ export default class PlayerSongList extends Component {
                     {this.createSongTable()}
                 </div>
                 <div className="song-lyric">
-                    <LyricComponent songId={this.props.playingTrack ? this.props.playingTrack.id : null} time={"00"} />
+                    <LyricComponent songId={this.props.playingTrack ? this.props.playingTrack.id : null} time={this.props.songProcessTime} />
                 </div>
             </div>
         </div>);

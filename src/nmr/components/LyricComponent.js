@@ -7,17 +7,16 @@ export default class LyricComponent extends Component {
 
     static propTypes = {
         songId: PropTypes.number,
-        time: PropTypes.string.isRequired,
+        songProcessTime: PropTypes.number
     };
 
     static defaultProps = {
-        lyricData: null,
-        time: null,
+        songId: null,
+        songProcessTime: null,
     };
 
     state = {
         data: null,
-        text: 'x',
     };
 
     constructor(props) {
@@ -49,7 +48,7 @@ export default class LyricComponent extends Component {
                         };
                     });
                     this.setState({
-                        data: lyrics,
+                        data: lyrics.filter(item => item.content !== ""),
                     });
                 } else {
                     this.setState({
@@ -61,22 +60,48 @@ export default class LyricComponent extends Component {
         }
     }
 
-    // data: time, lyric
-    createLyricItem(data) {
-
-        return (<li key={data.time} className={classnames('lyric-item')}>{data.content}</li>);
+    componentDidUpdate(prevProps, prevState) {
+        if (this._signupNode) {
+            console.log('xx');
+            this.goToSignupNode();
+        }
     }
 
+    createLyricItem(data, nextData) {
+        let isActive = false;
+        if (this.props.time !== undefined && this.props.time !== null) {
+            if (this.props.time < this.handleTimeFormate(nextData.time) && this.props.time > this.handleTimeFormate(data.time)) {
+                isActive = true;
+            }
+        }
+        return (<tr
+            key={data.time}
+            ref={isActive ? this.setSignupNode : data.time}
+            className={classnames('lyric-item', { active: isActive })}
+        ><td>{data.content}</td></tr>);
+    }
+
+    handleTimeFormate(text) {
+        if (text) {
+            const times = text.split(':');
+            const timeNum = parseInt(times[0]) * 60 + parseFloat(times[1]);
+            return timeNum;
+        }
+        return 10000;
+    }
 
     render() {
         if (this.state.data) {
-            const $lyrics = this.state.data.map(item => this.createLyricItem(item));
+            const $lyrics = this.state.data.map((item, index) => {
+                const nextData = this.state.data[index + 1] ? this.state.data[index + 1] : { time: null, content: null };
+                return this.createLyricItem(item, nextData);
+            });
             return (<div className="nm-lyric">
-                <ol className="lyric-list">{$lyrics}</ol>
+                <table className="lyric-list"><tbody>{$lyrics}</tbody></table>
             </div>);
         }
         return (<div className="nm-lyric">
-            <ol className="lyric-list"></ol>
+            <tabel className="lyric-list"></tabel>
         </div>);
     }
 

@@ -20,6 +20,7 @@ export default class PlayerView extends Component {
         songlist: PropTypes.array,
         handleSelectionChange: PropTypes.func.isRequired,
         handleSonglistOpenChange: PropTypes.func.isRequired,
+        handleSongProcessTime: PropTypes.func.isRequired,
     }
 
     static defaultProps = {
@@ -27,7 +28,8 @@ export default class PlayerView extends Component {
         selectedTrack: null,
         songlist: [],
         handleSelectionChange: null,
-        handleSonglistOpenChange: null
+        handleSonglistOpenChange: null,
+        handleSongProcessTime: null,
     }
 
     state = {
@@ -103,6 +105,7 @@ export default class PlayerView extends Component {
             const offset = Math.round(this.audio.currentTime * 500 / this.audio.duration);
             this.playingBar.style.width = offset + "px";
             this.processIcon.style.left = (offset - 8) + "px";
+            this.props.handleSongProcessTime(this.audio.currentTime);
             this.setState({currentTime: TimeUtil.formateTime(this.audio.currentTime * 1000)});
             this.forceUpdate();
         };
