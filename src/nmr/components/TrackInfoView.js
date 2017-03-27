@@ -19,35 +19,26 @@ export default class TrackInfoView extends Component
 
     // type 0 null and 1 list, 2 single
     state = {
-        data: null
+        data: this.props.data
     }
 
-    constructor(props)
-    {
+    constructor(props){
         super(props);
         this.signUpRootNode = (node) => {
             if (node) {
                 this._rootNode = node;
             }
         };
-        this._initTrack(props.data);
     }
 
     componentWillReceiveProps(nextProps)
     {
-        this._initTrack(nextProps.data);
-    }
-
-    componentWillUpdate(nextProps, nextState) {
-        if (nextProps.data !== this.props.data && this._rootNode) {
-            $(this._rootNode).animate({opacity: 0}, 20, "linear");
-        }
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if (prevProps.data !== this.props.data && this._rootNode) {
-            $(this._rootNode).animate({opacity: 1}, 50, "linear");
-        }
+      $(this._rootNode).css('opacity', 0);
+      this.setState({
+        data: nextProps.data
+      }, () => {
+        $(this._rootNode).animate({opacity: 1}, 500, "linear");
+      });
     }
 
     render()
@@ -86,16 +77,6 @@ export default class TrackInfoView extends Component
                     this.props.songlistAddChange(trackInfo);
                 });
             }
-        }
-    }
-
-    _initTrack(data)
-    {
-        if (data)
-        {
-            this.setState({
-                data
-            });
         }
     }
 }

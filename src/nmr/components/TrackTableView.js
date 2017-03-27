@@ -26,18 +26,30 @@ export default class TrackTableView extends Component {
 
     constructor(props) {
         super(props);
+        this.signUpRootNode = (node) => {
+            if (node) {
+                this._rootNode = node;
+            }
+        };
         this._initData();
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.playlistId !== nextProps.playlistId) {
+            $(this._rootNode).css('opacity', 0);
             if (nextProps.playlistId && nextProps.playlistId !== '') {
                 ServiceClient.getInstance().getPlayListDetail(nextProps.playlistId).then((result) => {
                     if (result && result.tracks && result.tracks !== this.state.data) {
-                        this.setState({data: result.tracks});
+                        this.setState({data: result.tracks}, () => {
+                          $(this._rootNode).animate({opacity: 1}, 500, "linear");
+                        });
                         this._offerTrackInfo(result, true);
                     }
                 });
+            } else {
+              this.setState({data: []}, () => {
+                $(this._rootNode).animate({opacity: 1}, 500, "linear");
+              });
             }
         }
     }
@@ -66,7 +78,7 @@ export default class TrackTableView extends Component {
             return this.createItem(data, track);
         });
         return (
-            <table className={ this.props.className }>
+            <table ref={this.signUpRootNode} className={ this.props.className }>
                 <thead>{$header}</thead>
                 <tbody>{$trs}</tbody>
             </table>

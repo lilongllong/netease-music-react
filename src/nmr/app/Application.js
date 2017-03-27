@@ -101,12 +101,17 @@ export default class Application extends Component {
 
     playSelectionChange(playlistId) {
         if (playlistId !== this.state.selectedPlaylistId) {
-            // $('section.content').animate({opacity: 0}, 50, 'linear').animate({opacity: 1}, 50, 'linear');
-            // $('section.content').css({opacity: 0});
-            $('section.content').scrollTop(0);
-            this.setState({selectedPlaylistId: playlistId});
+            $('section.content').animate({opacity: 0}, 200, 'linear', () => {
+              $('section.content').scrollTop(0);
+              $('.nm-track-info-view').css('opacity', 0);
+              $('.nm-track-table-view').css('opacity', 0);
+              this.setState({selectedPlaylistId: playlistId}, () => {
+                setTimeout(() => {
+                  $('section.content').animate({opacity: 1}, 200, 'linear');
+                }, 200);
+              });
+            });
         }
-
     }
 
     trackSelectionChange(track) {
