@@ -411,6 +411,7 @@ body,
   flex-shrink: 0;
   padding: 0;
   margin: 0;
+  opacity: 0;
 }
 .nm-app > header {
   background: #2f2f2f;
