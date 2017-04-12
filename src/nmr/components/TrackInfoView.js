@@ -31,14 +31,15 @@ export default class TrackInfoView extends Component
         };
     }
 
-    componentWillReceiveProps(nextProps)
-    {
-      $(this._rootNode).css('opacity', 0);
-      this.setState({
-        data: nextProps.data
-      }, () => {
-        $(this._rootNode).animate({opacity: 1}, 500, "linear");
-      });
+    componentWillReceiveProps(nextProps) {
+      if (nextProps.data && !nextProps.data.equal(this.state.data)) {
+        $(this._rootNode).css('opacity', 0);
+        this.setState({
+          data: nextProps.data
+        }, () => {
+          $(this._rootNode).animate({opacity: 1}, 500, "linear");
+        });
+      }
     }
 
     render()

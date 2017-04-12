@@ -63,7 +63,7 @@ export default class TrackInfoModel {
     }
 
     equal(data) {
-        if (data instanceof trackInfoModel && data.id === this.id) {
+        if (data instanceof TrackInfoModel && data.id === this.id) {
             return true;
         }
         return false;
