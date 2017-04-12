@@ -50671,7 +50671,7 @@ webpackJsonp([0],[
 	    (0, _createClass3.default)(TrackInfoModel, [{
 	        key: "equal",
 	        value: function equal(data) {
-	            if (data instanceof trackInfoModel && data.id === this.id) {
+	            if (data instanceof TrackInfoModel && data.id === this.id) {
 	                return true;
 	            }
 	            return false;
@@ -51862,12 +51862,14 @@ webpackJsonp([0],[
 	        value: function componentWillReceiveProps(nextProps) {
 	            var _this3 = this;
 
-	            $(this._rootNode).css('opacity', 0);
-	            this.setState({
-	                data: nextProps.data
-	            }, function () {
-	                $(_this3._rootNode).animate({ opacity: 1 }, 500, "linear");
-	            });
+	            if (nextProps.data && !nextProps.data.equal(this.state.data)) {
+	                $(this._rootNode).css('opacity', 0);
+	                this.setState({
+	                    data: nextProps.data
+	                }, function () {
+	                    $(_this3._rootNode).animate({ opacity: 1 }, 500, "linear");
+	                });
+	            }
 	        }
 	    }, {
 	        key: 'render',
