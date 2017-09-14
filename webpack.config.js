@@ -11,7 +11,7 @@ module.exports = {
         vendor: [ "jquery" ],
         nmr: ["webpack-dev-server/client?http://localhost:8080",
               "webpack/hot/only-dev-server",
-              "./nmr/index.js",
+              "./nmr/index.jsx",
               "./nmr/resource/index.less" ]
     },
 
@@ -24,7 +24,7 @@ module.exports = {
     module: {
         loaders: [
             {
-                test: /\.js$/,
+                test: /\.js|jsx$/,
                 exclude: /node_modules/,
                 loaders: ["react-hot", "babel-loader"]
             },

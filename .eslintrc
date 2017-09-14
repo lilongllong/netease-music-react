@@ -1,0 +1,10 @@
+{
+    "extends": [
+        "airbnb"
+    ],
+    rules: {
+        'no-console': 'off',
+        'indent': [ 'error', 4 ],
+        'quotes': [ 'error', 'single' ],
+    },
+}

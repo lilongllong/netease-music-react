@@ -1,4 +1,5 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import PlayerSongListPanel from '../components/PlayerSongListPanel';
 import PlayerView from '../components/PlayerView';
@@ -10,10 +11,9 @@ import TrackTableView from '../components/TrackTableView';
 
 import TrackInfoModel from '../model/TrackInfoModel';
 
-export default class Application extends Component {
+class Application extends Component {
     constructor(props) {
         super(props);
-
         this.playSelectionChange = this.playSelectionChange.bind(this);
         this.searchSelectionChange = this.searchSelectionChange.bind(this);
         this.songlistAddChange = this.songlistAddChange.bind(this);
@@ -24,14 +24,6 @@ export default class Application extends Component {
         this.toggleSonglistOpen = this.toggleSonglistOpen.bind(this);
         this.trackSelectionChange = this.trackSelectionChange.bind(this);
         this.trackInfoChange = this.trackInfoChange.bind(this);
-    }
-
-    static propTypes = {
-        userId: React.PropTypes.string.isRequired
-    }
-
-    static defaultProps = {
-        userId: ""
     }
 
     state = {
@@ -192,3 +184,13 @@ export default class Application extends Component {
         });
     }
 }
+
+Application.propTypes = {
+    userId: React.PropTypes.string.isRequired
+}
+
+Application.defaultProps = {
+    userId: ""
+}
+
+export default Application;

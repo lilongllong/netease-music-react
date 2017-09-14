@@ -10,6 +10,10 @@ const server = new WebpackDevServer(webpack(config), {
     proxy: config.devServer.proxy,
     hot: true,
     historyApiFallback: true,
+    colors: true,
+    host: '127.0.0.1',
+    open: true,
+    inline: true,
 });
 server.listen(8080, function (err) {
     if (err) {
