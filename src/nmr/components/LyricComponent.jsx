@@ -11,20 +11,21 @@ class LyricComponent extends Component {
         super(props);
         this.setSignupNode = (node) => {
             if (node) {
-                /* eslint no-underscore-dangle: "error" */
+                /*eslint no-underscore-dangle: ["error", { "allowAfterThis": true }]*/
                 this._signupNode = node;
             }
-        }
+        };
         this.goToSignupNode = () => {
             scrollIntoViewIfNeeded(this._signupNode, true, {
                 duration: 150,
                 easing: 'easeInOut',
             });
-        }
+        };
         this.state = {
             data: null,
-        }
+        };
     }
+
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.songId !== this.props.songId) {
@@ -40,7 +41,7 @@ class LyricComponent extends Component {
                         };
                     });
                     this.setState({
-                        data: lyrics.filter(item => item.content !== ""),
+                        data: lyrics.filter(item => item.content !== ''),
                     });
                 } else {
                     this.setState({
@@ -52,9 +53,8 @@ class LyricComponent extends Component {
         }
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate() {
         if (this._signupNode) {
-            console.log('xx');
             this.goToSignupNode();
         }
     }
@@ -81,7 +81,6 @@ class LyricComponent extends Component {
         }
         return 10000;
     }
-
     render() {
         if (this.state.data) {
             const $lyrics = this.state.data.map((item, index) => {
@@ -93,7 +92,7 @@ class LyricComponent extends Component {
             </div>);
         }
         return (<div className="nm-lyric">
-            <tabel className="lyric-list"></tabel>
+            <tabel className="lyric-list" />
         </div>);
     }
 }
@@ -101,7 +100,8 @@ class LyricComponent extends Component {
 
 LyricComponent.propTypes = {
     songId: PropTypes.number,
-    songProcessTime: PropTypes.number
+    songProcessTime: PropTypes.number,
+    time: PropTypes.number,
 };
 
 LyricComponent.defaultProps = {
