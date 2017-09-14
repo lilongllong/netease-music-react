@@ -1,28 +1,17 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import scrollIntoViewIfNeeded from 'scroll-into-view-if-needed';
 import classnames from 'classnames';
+
 import ServiceClient from '../service/ServiceClient';
 
-export default class LyricComponent extends Component {
 
-    static propTypes = {
-        songId: PropTypes.number,
-        songProcessTime: PropTypes.number
-    };
-
-    static defaultProps = {
-        songId: null,
-        songProcessTime: null,
-    };
-
-    state = {
-        data: null,
-    };
-
+class LyricComponent extends Component {
     constructor(props) {
         super(props);
         this.setSignupNode = (node) => {
             if (node) {
+                /* eslint no-underscore-dangle: "error" */
                 this._signupNode = node;
             }
         }
@@ -32,11 +21,14 @@ export default class LyricComponent extends Component {
                 easing: 'easeInOut',
             });
         }
+        this.state = {
+            data: null,
+        }
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.songId !== this.props.songId) {
-            ServiceClient.getInstance().fetchSongLyric(nextProps.songId).then(result => {
+            ServiceClient.getInstance().fetchSongLyric(nextProps.songId).then((result) => {
                 if (result) {
                     const lyrics = result.lyric.split(/\r?\n/).map(item => {
                         const index = item.indexOf(']');
@@ -104,5 +96,17 @@ export default class LyricComponent extends Component {
             <tabel className="lyric-list"></tabel>
         </div>);
     }
-
 }
+
+
+LyricComponent.propTypes = {
+    songId: PropTypes.number,
+    songProcessTime: PropTypes.number
+};
+
+LyricComponent.defaultProps = {
+    songId: null,
+    songProcessTime: null,
+};
+
+export default LyricComponent;

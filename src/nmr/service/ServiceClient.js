@@ -2,8 +2,7 @@ import urlencode from "urlencode";
 
 const NM_API_URL = "api";
 
-export default class ServiceClient
-{
+export default class ServiceClient {
     static _instance = null;
     constructor()
     {
