@@ -1,6 +1,6 @@
 {
     "extends": [
-        "airbnb"
+        "@ali/eslint-config-next"
     ],
     rules: {
         'no-console': 'off',
