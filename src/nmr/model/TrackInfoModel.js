@@ -1,16 +1,6 @@
 import TimeUtil from '../util/TimeUtil';
 
 export default class TrackInfoModel {
-    /*
-    {
-        id: data.id,
-        imgsrc: data.album.picUrl,
-        name: data.name,
-        artist: data.album.artists.map(artist => artist.name).join(","),
-        type: "单曲",
-        mp3Url: data.mp3Url
-    }
-    */
     constructor(props) {
         if (props && props.data && props.type) {
             const data = props.data;
@@ -18,9 +8,9 @@ export default class TrackInfoModel {
             this._id = data.id;
             this._imgsrc = data.album.picUrl;
             this._name = data.name;
-            this._artist = data.album.artists.map(artist => artist.name).join(",");
+            this._artist = data.album.artists.map(artist => artist.name).join(',');
             this._type = props.type;
-            this._time = TimeUtil.formateTime(data.lmusic ? data.lMusic.playTime : data.duration)
+            this._time = TimeUtil.formateTime((data.lmusic ? data.lMusic.playTime : data.duration))
         }
     }
 

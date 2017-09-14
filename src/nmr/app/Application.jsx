@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import PlayerSongListPanel from '../components/PlayerSongListPanel.jsx';
-import PlayerView from '../components/PlayerView';
-import PlayListsView from '../components/PlayListsView';
-import SearchView from '../components/SearchView';
-import TrackInfoView from '../components/TrackInfoView';
-import TrackTableView from '../components/TrackTableView';
+import PlayerView from '../components/PlayerView.jsx';
+import PlayListsView from '../components/PlayListsView.jsx';
+import SearchView from '../components/SearchView.jsx';
+import TrackInfoView from '../components/TrackInfoView.jsx';
+import TrackTableView from '../components/TrackTableView.jsx';
 
 import TrackInfoModel from '../model/TrackInfoModel';
 
